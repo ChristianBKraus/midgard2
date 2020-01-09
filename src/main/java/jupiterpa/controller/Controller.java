@@ -1,9 +1,8 @@
 package jupiterpa.controller;
 
 import jupiterpa.repository.DCharacterRepository;
-import jupiterpa.repository.DSkillRepository;
 import jupiterpa.model.DCharacter;
-import jupiterpa.model.DSkill;
+import jupiterpa.model.SkillDTO;
 import jupiterpa.service.CostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +17,6 @@ public class Controller {
     @Autowired
     DCharacterRepository characterRepo;
     @Autowired
-    DSkillRepository skillRepo;
-    @Autowired
     CostService service;
 
     @GetMapping("/character")
@@ -31,8 +28,11 @@ public class Controller {
         return characterRepo.findByName(name);
     }
     @GetMapping("/skill/{characterId}")
-    public List<DSkill> getSkills(@PathVariable long id) {
-        return skillRepo.findByCharacterId(id);
+    public List<SkillDTO> getSkills(@PathVariable long id) {
+        return service.getSkills(id);
     }
+
+    @PostMapping("/character/{characterId}/learn/{skill}")
+    public int learnSkill(@PathVariable long characterId, @PathVariable String skill) { return service.learn(characterId, skill);}
 
 }

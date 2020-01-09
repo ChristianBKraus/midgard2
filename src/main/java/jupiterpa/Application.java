@@ -13,12 +13,12 @@ public class Application implements CommandLineRunner {
     private static final Marker TECHNICAL = MarkerFactory.getMarker("TECHNICAL");
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public static void main(String args[]){
+    public static void main(String[] args){
         SpringApplication.run(Application.class, args);
     }
 
     @Override
-    public void run(String... arg0) throws Exception {
+    public void run(String... arg0) {
         logger.info(TECHNICAL,"Application started");
     }
 
