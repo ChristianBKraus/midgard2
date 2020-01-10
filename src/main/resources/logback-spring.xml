@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT_COLOR" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%gray(%d{HH:mm:ss.SSS} [%thread]) %yellow(%10X{key}) %gray(%-5level %-20.20class{10} - %-10.10M) : %boldWhite(%msg) %n</pattern>
+        </encoder>
+    </appender>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%10X{key} %-5level %-20.20class{10} - %-10.10M : %msg %n</pattern>
+        </encoder>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>

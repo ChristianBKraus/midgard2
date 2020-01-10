@@ -70,7 +70,7 @@ public class CreateService {
         s.setBonus( s.getLevel() + s.getAttributeBonus() );
 
         // practice
-        Cost cost = costService.getCost(c,s,0);
+        Cost cost = costService.getCost(c,s);
         s.setCostEP(cost.getEp());
         s.setCostGold(cost.getGold());
 

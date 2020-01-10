@@ -8,4 +8,6 @@ public class Cost {
     int gold;
     int ep;
     int practice;
+    int te;
+    int le;
 }
