@@ -8,7 +8,9 @@ public class CostsMain {
     int bonus;
     int multiplier;
 
-    public CostsMain(String[] values) {
-
+    public CostsMain(String[] v) {
+        costRow = v[0];
+        bonus = Integer.getInteger(v[1]);
+        multiplier = Integer.getInteger(v[2]);
     }
 }
