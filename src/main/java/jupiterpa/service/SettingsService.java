@@ -4,10 +4,13 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import jupiterpa.actuator.Health;
+import jupiterpa.actuator.HealthInfo;
 import jupiterpa.model.CostsClass;
 import jupiterpa.model.CostsMain;
 import jupiterpa.model.CostsSkill;
 import jupiterpa.model.Skill;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -28,10 +31,14 @@ public class SettingsService {
     public List<String> classes = new ArrayList<>(); // by CostsClass
     public List<Skill> defaultSkills;                // on Request
 
+    @Autowired
+    Health health;
+
     SettingsService() throws URISyntaxException, IOException {
         loadFile("mainCosts.csv",mainConsumer);
         loadFile("classCosts.csv",classConsumer);
         loadFile("skillCosts.csv",skillConsumer);
+        health.setHealth(new HealthInfo("Status",false,"Initialized"));
     }
 
     Consumer<String[]> mainConsumer = line -> {
