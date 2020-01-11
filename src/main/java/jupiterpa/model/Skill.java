@@ -1,10 +1,11 @@
 package jupiterpa.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@Data
+@Data @NoArgsConstructor
 public class Skill {
     UUID characterId;
     String name;
