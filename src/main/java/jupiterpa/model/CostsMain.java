@@ -10,7 +10,7 @@ public class CostsMain {
 
     public CostsMain(String[] v) {
         costRow = v[0];
-        bonus = Integer.getInteger(v[1]);
-        multiplier = Integer.getInteger(v[2]);
+        bonus = Integer.parseInt(v[1]);
+        multiplier = Integer.parseInt(v[2]);
     }
 }

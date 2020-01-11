@@ -19,15 +19,16 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
 @Service
 public class SettingsService {
-    public Map<String, CostsMain> mainCosts; //CostRow+Bonus
-    public Map<String, CostsClass> classCosts; //ClassName+Group
-    public Map<String, CostsSkill> skillCosts; //Name
+    public Map<String, CostsMain> mainCosts = new HashMap<>(); //CostRow+Bonus
+    public Map<String, CostsClass> classCosts = new HashMap<>(); //ClassName+Group
+    public Map<String, CostsSkill> skillCosts = new HashMap<>(); //Name
     public List<String> classes = new ArrayList<>(); // by CostsClass
     public List<Skill> defaultSkills;                // on Request
 
@@ -38,7 +39,8 @@ public class SettingsService {
         loadFile("mainCosts.csv",mainConsumer);
         loadFile("classCosts.csv",classConsumer);
         loadFile("skillCosts.csv",skillConsumer);
-        health.setHealth(new HealthInfo("Status",false,"Initialized"));
+        if (health != null)
+          health.setHealth(new HealthInfo("Status",false,"Initialized"));
     }
 
     Consumer<String[]> mainConsumer = line -> {
