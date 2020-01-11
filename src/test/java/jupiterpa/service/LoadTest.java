@@ -20,7 +20,7 @@ public class LoadTest {
     }
     @Test
     public void test() throws IOException, URISyntaxException {
-        SettingsService settings = new SettingsService();
+        SettingsServiceImpl settings = new SettingsServiceImpl();
 
         assertThat( settings.mainCosts.size(), greaterThanOrEqualTo(1) );
         assertThat( settings.classCosts.size(), greaterThanOrEqualTo(1 ) );

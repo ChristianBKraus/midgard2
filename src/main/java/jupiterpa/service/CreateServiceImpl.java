@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class CreateService {
+public class CreateServiceImpl {
     @Autowired
     SettingsService settings;
     @Autowired
@@ -20,7 +20,7 @@ public class CreateService {
     public Character create(Character c) throws Exception {
 
         // Checks
-        if (! settings.classes.contains(c.getClassName()) ) {
+        if (! settings.getClasses().contains(c.getClassName()) ) {
             throw new Exception("Class not found");
         }
         // check range
@@ -40,11 +40,10 @@ public class CreateService {
         c.setGsBonus(getBonus(c.getGs()));
 
         // Determine all Skills (incl. unskilled)
-        settings.loadFile("defaultSkills.csv",settings.defaultSkillConsumer);
         for (Skill s : c.getSkills()) {
             s.setLearned(true); // mark all passed skills as learned
         }
-        for (Skill s : settings.defaultSkills) {
+        for (Skill s : settings.getDefaultSkills()) {
             // if skill is passed use it, otherwise copy default skill
             if (! utility.existSkill(c.getSkills(), s.getName()) ) {
                 c.getSkills().add(s);
@@ -100,7 +99,7 @@ public class CreateService {
         return 0;
     }
     private String getBaseAttribute(Skill skill) throws Exception {
-        Skill s = utility.findSkill(settings.defaultSkills,skill.getName());
+        Skill s = utility.findSkill(settings.getDefaultSkills(),skill.getName());
             return s.getBaseAttribute();
     }
 

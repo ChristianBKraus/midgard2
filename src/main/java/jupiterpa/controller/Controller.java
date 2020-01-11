@@ -3,8 +3,8 @@ package jupiterpa.controller;
 import jupiterpa.model.Character;
 import jupiterpa.model.Cost;
 import jupiterpa.repository.CharacterRepository;
-import jupiterpa.service.CostService;
-import jupiterpa.service.CreateService;
+import jupiterpa.service.CostServiceImpl;
+import jupiterpa.service.CreateServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +19,9 @@ public class Controller {
     @Autowired
     CharacterRepository characterRepo;
     @Autowired
-    CostService costService;
+    CostServiceImpl costService;
     @Autowired
-    CreateService createService;
+    CreateServiceImpl createService;
 
     @GetMapping("/character")
     public List<Character> getCharacters() {

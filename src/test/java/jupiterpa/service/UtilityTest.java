@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 
 public class UtilityTest {
-    UtilityService service = new UtilityService();
+    UtilityServiceImpl service = new UtilityServiceImpl();
 
     List<Skill> skills;
     Skill a;
