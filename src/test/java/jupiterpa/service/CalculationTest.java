@@ -2,15 +2,15 @@ package jupiterpa.service;
 
 import jupiterpa.model.PlayerCharacter;
 import jupiterpa.model.PlayerCharacterEntity;
-import jupiterpa.model.Skill;
-import jupiterpa.model.SkillEntity;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.List;
+
+import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 
 public class CalculationTest {
 
@@ -26,7 +26,13 @@ public class CalculationTest {
 
     @Test
     public void test() throws Exception {
-        PlayerCharacterEntity c = TestCreation.create();
-        service.enrich(c);
+        PlayerCharacterEntity entity = TestCreation.create();
+
+        PlayerCharacter act = service.enrich(entity);
+        act.setSkills(new ArrayList<>());
+
+        PlayerCharacter exp = TestCreation.enriched(act.getId());
+
+        assertThat( act, equalTo(exp));
     }
 }

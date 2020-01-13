@@ -1,20 +1,23 @@
 package jupiterpa.service;
 
+import jupiterpa.model.PlayerCharacter;
 import jupiterpa.model.PlayerCharacterEntity;
 import jupiterpa.model.SkillEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class TestCreation {
+
     public static PlayerCharacterEntity create() {
         PlayerCharacterEntity c = new PlayerCharacterEntity();
         c.setName("Name");
         c.setClassName("Krieger");
-        c.setSt(10);
+        c.setSt(2);
         c.setKo(10);
-        c.setGs(10);
-        c.setGw(10);
+        c.setGs(90);
+        c.setGw(99);
 
 
         SkillEntity s = new SkillEntity();
@@ -27,5 +30,26 @@ public class TestCreation {
         c.setSkills(skills);
 
         return c;
+    }
+
+    public static PlayerCharacter enriched(UUID id) {
+        PlayerCharacter exp = new PlayerCharacter();
+        exp.setId( id );
+        exp.setName( "Name" );
+        exp.setClassName( "Krieger" );
+        exp.setLevel(1);
+        exp.setNotSpentEp(0);
+        exp.setTotalEp(0);
+        exp.setSt( 2 );
+        exp.setKo( 10 );
+        exp.setGs( 90 );
+        exp.setGw( 99 );
+
+        exp.setStBonus(-2);
+        exp.setKoBonus(-1);
+        exp.setGsBonus(1);
+        exp.setGwBonus(2);
+
+        return exp;
     }
 }
