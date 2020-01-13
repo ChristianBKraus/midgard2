@@ -1,15 +1,5 @@
 package jupiterpa.service;
 
-import jupiterpa.model.PlayerCharacter;
-import jupiterpa.model.Cost;
-import jupiterpa.model.Skill;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
 public class LearningTest {
 /*
     LearningService createService() throws IOException, URISyntaxException {

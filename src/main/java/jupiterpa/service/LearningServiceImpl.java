@@ -1,7 +1,6 @@
 package jupiterpa.service;
 
 import jupiterpa.model.*;
-import jupiterpa.model.PlayerCharacter;
 import jupiterpa.repository.CharacterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -10,4 +10,5 @@ public interface UtilityService {
     boolean existSkill(List<Skill> skills, String name);
 
     SkillEntity findSkillEntity(List<SkillEntity> skills, String name) throws Exception;
+    boolean existSkillEntity(List<SkillEntity> skills, String name);
 }

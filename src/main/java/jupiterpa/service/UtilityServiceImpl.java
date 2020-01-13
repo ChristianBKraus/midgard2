@@ -30,4 +30,14 @@ public class UtilityServiceImpl implements UtilityService {
         if (! option.isPresent()) throw new Exception("Skill does not exist");
         return option.get();
     }
+
+    public boolean existSkillEntity(List<SkillEntity> skills, String name) {
+        try {
+            findSkillEntity(skills,name);
+        } catch (Exception ex){
+            return false;
+        }
+        return true;
+    }
+
 }

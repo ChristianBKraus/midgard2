@@ -54,23 +54,21 @@ public class CalculationServiceImpl implements CalculationService {
         c.setGwBonus(getBonus(c.getGw()));
         c.setGsBonus(getBonus(c.getGs()));
 
-        // Determine all Skills (incl. unskilled)
-        for (Skill s : c.getSkills()) {
-            s.setLearned(true); // mark all passed skills as learned
-        }
         //// Skills
         for (Skill defaultSkill : settings.getDefaultSkills()) {
-            // if skill is passed use it, otherwise copy default skill
             Skill skill = new Skill();
-            if (! utility.existSkill(c.getSkills(), defaultSkill.getName()) ) {
+            if (! utility.existSkillEntity(character.getSkills(), defaultSkill.getName()) ) {
+                // Skill does not exist for character --> use default
                 skill.setName( defaultSkill.getName() );
                 skill.setLevel( defaultSkill.getLevel() );
                 skill.setPractice(0);
+                skill.setLearned(false);
             } else {
                 SkillEntity se = utility.findSkillEntity(character.getSkills(),defaultSkill.getName());
                 skill.setName( se.getName() );
                 skill.setLevel( se.getLevel() );
                 skill.setPractice( se.getPractice() );
+                skill.setLearned(true);
             }
             c.getSkills().add(skill);
             // enrich raw skills data
