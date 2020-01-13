@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class CostsSkill {
     String name;
+    int startBonus;
     String attribute;
     String groups;
     int le;
@@ -12,9 +13,10 @@ public class CostsSkill {
 
     public CostsSkill(String[] v) {
         name = v[0];
-        attribute = v[1];
-        groups = v[2];
-        le = Integer.parseInt(v[3]);
-        costRow = v[4];
+        startBonus = Integer.parseInt(v[1]);
+        attribute = v[2];
+        groups = v[3];
+        le = Integer.parseInt(v[4]);
+        costRow = v[5];
     }
 }

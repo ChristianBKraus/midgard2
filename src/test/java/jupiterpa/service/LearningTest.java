@@ -1,43 +1,61 @@
 package jupiterpa.service;
 
+import jupiterpa.model.Cost;
+import jupiterpa.model.PlayerCharacter;
+import jupiterpa.model.PlayerCharacterEntity;
+import jupiterpa.model.Skill;
+import org.junit.Test;
+import org.junit.jupiter.api.*;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
+
 public class LearningTest {
-/*
-    LearningService createService() throws IOException, URISyntaxException {
-        SettingsService s = new SettingsServiceImpl();
-        UtilityService u = new UtilityServiceImpl();
-        LearningService c = new LearningServiceImpl(s,u);
-        return c;
-    }
-    public PlayerCharacter createCharacter() {
-        PlayerCharacter c = new PlayerCharacter();
-        c.setName("Name");
-        c.setClassName("Krieger");
-        c.setSt(10);
-        c.setKo(10);
-        c.setGs(10);
-        c.setGw(10);
 
+    SettingsService settings;
+    UtilityService utility;
+    CalculationService calculation;
+    LearningService learning;
 
-        Skill s = new Skill();
-        s.setName("Klettern");
-        s.setLevel(7);
-        s.setBaseAttribute("Gs");
-
-        List<Skill> skills = new ArrayList<>();
-        skills.add(s);
-        c.setSkills(skills);
-
-        return c;
+    void setup() throws IOException, URISyntaxException {
+        settings = new SettingsServiceImpl();
+        utility = new UtilityServiceImpl();
+        calculation = new CalculationServiceImpl(settings,utility);
+        learning = new LearningServiceImpl(settings, utility, calculation);
     }
 
     @Test
-    public void calculate() throws IOException, URISyntaxException {
-        LearningService service = createService();
-        PlayerCharacter playerCharacter = createCharacter();
-        Skill skill = playerCharacter.getSkills().get(0);
+    public void increase() throws Exception {
+        setup();
 
-        Cost cost = service.calculate(playerCharacter,skill);
+        // Prepare
+        PlayerCharacterEntity ce = TestCreation.create();
+        PlayerCharacter ch = calculation.enrich( ce );
+
+        ch.setTotalEp(200);
+        ch.setNotSpentEp(200);
+
+        Skill ori = utility.findSkill(ch.getSkills(),"Klettern");
+        int ep = ori.getCostEP();
+        int gold = ori.getCostGold();
+
+        // Process
+        learning.learn(ch,"Klettern",20);
+
+        // Check Skill
+        Skill klettern = utility.findSkill(ch.getSkills(),"Klettern");
+
+        assertThat( klettern.getBonus(), is(14));
+        assertThat( klettern.getCostEP(), is( ep *2));
+        assertThat( klettern.getCostGold(), is(gold));
+
+        // Check Character
+        assertThat( ch.getNotSpentEp(), is(100));
+        assertThat( ch.getTotalEp(), is(200));
+        // Gold??? TODO
     }
- */
 }
 

@@ -45,7 +45,11 @@ public class CalculationTest {
 
         // Get expected skill and check
         assertThat( skills.size(), is(2));
+
         Skill klettern = utility.findSkill(skills,"Klettern");
         assertThat( klettern, is( TestCreation.getExpectedSkill("Klettern", act.getId())));
+
+        Skill reiten = utility.findSkill(skills,"Reiten");
+        assertThat( reiten, is( TestCreation.getExpectedSkill("Reiten", act.getId())));
     }
 }

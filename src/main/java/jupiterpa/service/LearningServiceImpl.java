@@ -1,18 +1,13 @@
 package jupiterpa.service;
 
-import jupiterpa.model.*;
-import jupiterpa.repository.CharacterRepository;
+import jupiterpa.model.Cost;
+import jupiterpa.model.PlayerCharacter;
+import jupiterpa.model.Skill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.UUID;
-
 @Service
 public class LearningServiceImpl implements LearningService {
-
-    @Autowired
-    CharacterRepository characterRepo;
 
     @Autowired
     SettingsService settings;
@@ -27,12 +22,7 @@ public class LearningServiceImpl implements LearningService {
         this.calculation = calculation;
     }
 
-    public Cost learn(UUID characterId, String skillName, int gold) throws Exception {
-
-        // Read corresponding character
-        Optional<PlayerCharacter> co = characterRepo.findById(characterId);
-        if (! co.isPresent()) throw new Exception("Character does not exist");
-        PlayerCharacter c = co.get();
+    public Cost learn(PlayerCharacter c, String skillName, int gold) throws Exception {
 
         // Find corresponding Skill
         Skill s = utility.findSkill(c.getSkills(),skillName);
@@ -66,9 +56,6 @@ public class LearningServiceImpl implements LearningService {
         cost = calculation.calculate(c,s);
         s.setCostEP(cost.getEp());
         s.setCostGold(cost.getGold());
-
-        // save character
-        characterRepo.save(c);
 
         // return cost spend for this learning
         return new Cost(spentGold,

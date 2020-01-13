@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequestMapping(path = Controller.PATH)
@@ -40,7 +41,19 @@ public class Controller {
                 @PathVariable String skill,
                 @PathVariable int gold
                 ) throws Exception {
-        return costService.learn(characterId, skill, gold);
+
+        // Read corresponding character
+        Optional<PlayerCharacter> co = characterRepo.findById(characterId);
+        if (! co.isPresent()) throw new Exception("Character does not exist");
+        PlayerCharacter c = co.get();
+
+        // Learn
+        Cost cost = costService.learn(c, skill, gold);
+
+        // Save
+        characterRepo.save(c);
+
+        return cost;
     }
 
     @PostMapping("/character")

@@ -26,7 +26,7 @@ public class LoadTest {
         assertThat( settings.classCosts.size(), greaterThanOrEqualTo(1 ) );
         assertThat( settings.skillCosts.size(), greaterThanOrEqualTo(1 ) );
 
-        CostsMain mainCosts = settings.mainCosts.get("A/8");
+        CostsMain mainCosts = settings.mainCosts.get("A/13");
         assertThat( mainCosts.getMultiplier(), is(10) );
 
         CostsSkill skillCosts = settings.skillCosts.get("Klettern");
