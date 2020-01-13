@@ -26,11 +26,11 @@ import java.util.function.Consumer;
 
 @Service
 public class SettingsServiceImpl implements SettingsService {
-    public Map<String, CostsMain> mainCosts = new HashMap<>(); //CostRow+Bonus
-    public Map<String, CostsClass> classCosts = new HashMap<>(); //ClassName+Group
-    public Map<String, CostsSkill> skillCosts = new HashMap<>(); //Name
-    public List<String> classes = new ArrayList<>(); // by CostsClass
-    public List<Skill> defaultSkills;                // on Request
+    Map<String, CostsMain> mainCosts = new HashMap<>(); //CostRow+Bonus
+    Map<String, CostsClass> classCosts = new HashMap<>(); //ClassName+Group
+    Map<String, CostsSkill> skillCosts = new HashMap<>(); //Name
+    List<String> classes = new ArrayList<>(); // by CostsClass
+    List<Skill> defaultSkills;                // on Request
 
     @Autowired
     Health health;
@@ -48,11 +48,12 @@ public class SettingsServiceImpl implements SettingsService {
         return classes;
     }
     public List<Skill> getDefaultSkills() throws IOException, URISyntaxException {
+        defaultSkills = new ArrayList<>();
         loadFile("defaultSkills.csv",defaultSkillConsumer);
         return defaultSkills;
     }
 
-    SettingsServiceImpl() throws URISyntaxException, IOException {
+    public SettingsServiceImpl() throws URISyntaxException, IOException {
         loadFile("mainCosts.csv",mainConsumer);
         loadFile("classCosts.csv",classConsumer);
         loadFile("skillCosts.csv",skillConsumer);

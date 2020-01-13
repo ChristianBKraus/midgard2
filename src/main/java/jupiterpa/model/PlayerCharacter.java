@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Data @NoArgsConstructor
-public class Character {
+public class PlayerCharacter {
     UUID id;
     String name;
 

@@ -1,10 +1,11 @@
 package jupiterpa.controller;
 
-import jupiterpa.model.Character;
+import jupiterpa.model.PlayerCharacter;
 import jupiterpa.model.Cost;
+import jupiterpa.model.PlayerCharacterEntity;
 import jupiterpa.repository.CharacterRepository;
-import jupiterpa.service.CostServiceImpl;
-import jupiterpa.service.CreateServiceImpl;
+import jupiterpa.service.LearningServiceImpl;
+import jupiterpa.service.CalculationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,17 +20,17 @@ public class Controller {
     @Autowired
     CharacterRepository characterRepo;
     @Autowired
-    CostServiceImpl costService;
+    LearningServiceImpl costService;
     @Autowired
-    CreateServiceImpl createService;
+    CalculationServiceImpl createService;
 
     @GetMapping("/character")
-    public List<Character> getCharacters() {
+    public List<PlayerCharacter> getCharacters() {
         return characterRepo.findAll();
     }
 
     @GetMapping("/character/{name}")
-    public List<Character> getCharacters(@PathVariable String name) {
+    public List<PlayerCharacter> getCharacters(@PathVariable String name) {
         return characterRepo.findByName(name);
     }
 
@@ -43,9 +44,9 @@ public class Controller {
     }
 
     @PostMapping("/character")
-    public Character create(@RequestBody Character character) throws Exception {
-        Character enrichedCharacter = createService.create(character);
-        return characterRepo.save(enrichedCharacter);
+    public PlayerCharacter create(@RequestBody PlayerCharacterEntity playerCharacter) throws Exception {
+        PlayerCharacter enrichedPlayerCharacter = createService.enrich(playerCharacter);
+        return characterRepo.save(enrichedPlayerCharacter);
     }
 
 }

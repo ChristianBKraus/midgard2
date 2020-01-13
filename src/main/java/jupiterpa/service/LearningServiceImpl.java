@@ -1,7 +1,7 @@
 package jupiterpa.service;
 
 import jupiterpa.model.*;
-import jupiterpa.model.Character;
+import jupiterpa.model.PlayerCharacter;
 import jupiterpa.repository.CharacterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,27 +10,36 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class CostServiceImpl implements CostService {
+public class LearningServiceImpl implements LearningService {
 
     @Autowired
     CharacterRepository characterRepo;
+
     @Autowired
     SettingsService settings;
     @Autowired
     UtilityService utility;
+    @Autowired
+    CalculationService calculation;
+
+    public LearningServiceImpl(SettingsService settings, UtilityService utility, CalculationService calculation) {
+        this.settings = settings;
+        this.utility = utility;
+        this.calculation = calculation;
+    }
 
     public Cost learn(UUID characterId, String skillName, int gold) throws Exception {
 
         // Read corresponding character
-        Optional<Character> co = characterRepo.findById(characterId);
+        Optional<PlayerCharacter> co = characterRepo.findById(characterId);
         if (! co.isPresent()) throw new Exception("Character does not exist");
-        Character c = co.get();
+        PlayerCharacter c = co.get();
 
         // Find corresponding Skill
         Skill s = utility.findSkill(c.getSkills(),skillName);
 
         // Determine current cost (anew)
-        Cost cost = getCost(c, s);
+        Cost cost = calculation.calculate(c, s);
 
         //// consider used gold and reduce amount of EP
         // check for minimum gold
@@ -55,7 +64,7 @@ public class CostServiceImpl implements CostService {
         s.setBonus(s.getLevel() + s.getAttributeBonus());
 
         // Recalculate new cost and store on skill
-        cost = getCost(c,s);
+        cost = calculation.calculate(c,s);
         s.setCostEP(cost.getEp());
         s.setCostGold(cost.getGold());
 
@@ -70,32 +79,4 @@ public class CostServiceImpl implements CostService {
                         cost.getLe());
     }
 
-    public Cost getCost(Character c, Skill s) {
-
-        CostsSkill costsSkill = settings.getSkillCosts().get(s.getName());
-
-        String group = costsSkill.getGroups();
-        CostsClass costsClass = settings.getClassCosts().get(c.getClassName()+"/"+group);
-
-        int newBonus = s.getLevel() + 1;
-        CostsMain costsMain = settings.getMainCosts().get(costsSkill.getCostRow() + "/" + newBonus);
-
-        int le = costsSkill.getLe();
-        int teCost = costsClass.getCost();
-        int te = costsMain.getMultiplier();
-        int ep;
-        int gold;
-        int practice;
-        if (s.isLearned()) {
-            practice = Math.min(te, s.getPractice());
-            ep = (te - practice) * teCost;
-            gold = 20;
-        } else {
-            practice = 0;
-            ep = le * 3 * teCost;
-            gold = 200;
-        }
-
-        return new Cost(gold,ep,practice,te,le);
-    }
 }
