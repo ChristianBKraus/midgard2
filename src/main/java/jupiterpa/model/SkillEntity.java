@@ -15,9 +15,4 @@ public class SkillEntity {
 
     int practice;
 
-    public SkillEntity(String[] v) {
-        name = v[0];
-        level = Integer.parseInt(v[1]);
-        baseAttribute = v[2];
-    }
 }

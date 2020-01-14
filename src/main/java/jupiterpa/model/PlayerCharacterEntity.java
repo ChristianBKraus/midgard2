@@ -16,6 +16,7 @@ public class PlayerCharacterEntity {
     int level;
     int notSpentEp;
     int totalEp;
+    int gold;
 
     int st;
     int ko;

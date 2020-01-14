@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 public class LearningServiceImpl implements LearningService {
 
     @Autowired
-    SettingsService settings;
+    final SettingsService settings;
     @Autowired
-    UtilityService utility;
+    final UtilityService utility;
     @Autowired
-    CalculationService calculation;
+    final CalculationService calculation;
 
     public LearningServiceImpl(SettingsService settings, UtilityService utility, CalculationService calculation) {
         this.settings = settings;
@@ -45,11 +45,19 @@ public class LearningServiceImpl implements LearningService {
         int notSpentEp = c.getNotSpentEp() - reducedByGold;
         if (notSpentEp < 0) throw new Exception("Not enough EP left");
         c.setNotSpentEp(notSpentEp);
+        // update gold
+        c.setGold( c.getGold() - spentGold - cost.getGold());
         // update practice
         s.setPractice( s.getPractice() - cost.getPractice());
 
         // update skill (level, bonus)
-        s.setLevel(s.getLevel() + 1);
+        if (s.isLearned())
+          s.setLevel(s.getLevel() + 1);
+        else {
+            int level = settings.getSkillCosts().get(skillName).getStartBonus();
+            s.setLevel(level);
+            s.setLearned(true);
+        }
         s.setBonus(s.getLevel() + s.getAttributeBonus());
 
         // Recalculate new cost and store on skill

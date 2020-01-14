@@ -3,7 +3,6 @@ package jupiterpa.service;
 import jupiterpa.model.CostsClass;
 import jupiterpa.model.CostsMain;
 import jupiterpa.model.CostsSkill;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -14,10 +13,6 @@ import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 
 public class LoadTest {
-    @Before
-    public void setup() {
-
-    }
     @Test
     public void test() throws IOException, URISyntaxException {
         SettingsServiceImpl settings = new SettingsServiceImpl();

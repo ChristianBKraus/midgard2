@@ -26,10 +26,10 @@ import java.util.function.Consumer;
 
 @Service
 public class SettingsServiceImpl implements SettingsService {
-    Map<String, CostsMain> mainCosts = new HashMap<>(); //CostRow+Bonus
-    Map<String, CostsClass> classCosts = new HashMap<>(); //ClassName+Group
-    Map<String, CostsSkill> skillCosts = new HashMap<>(); //Name
-    List<String> classes = new ArrayList<>(); // by CostsClass
+    final Map<String, CostsMain> mainCosts = new HashMap<>(); //CostRow+Bonus
+    final Map<String, CostsClass> classCosts = new HashMap<>(); //ClassName+Group
+    final Map<String, CostsSkill> skillCosts = new HashMap<>(); //Name
+    final List<String> classes = new ArrayList<>(); // by CostsClass
     List<Skill> defaultSkills;                // on Request
 
     @Autowired
@@ -61,20 +61,20 @@ public class SettingsServiceImpl implements SettingsService {
           health.setHealth(new HealthInfo("Status",false,"Initialized"));
     }
 
-    Consumer<String[]> mainConsumer = line -> {
+    final Consumer<String[]> mainConsumer = line -> {
         CostsMain c = new CostsMain( line );
         mainCosts.put(c.getCostRow() + "/" + c.getBonus(),c);
     };
-    Consumer<String[]> classConsumer = line -> {
+    final Consumer<String[]> classConsumer = line -> {
         CostsClass c = new CostsClass( line );
         classCosts.put(c.getClassName() + "/" + c.getGroup(),c);
         classes.add(c.getClassName());
     };
-    Consumer<String[]> skillConsumer = line -> {
+    final Consumer<String[]> skillConsumer = line -> {
         CostsSkill c = new CostsSkill( line );
         skillCosts.put(c.getName(),c);
     };
-    Consumer<String[]> defaultSkillConsumer = line -> {
+    final Consumer<String[]> defaultSkillConsumer = line -> {
         Skill c = new Skill( line );
         defaultSkills.add(c);
     };

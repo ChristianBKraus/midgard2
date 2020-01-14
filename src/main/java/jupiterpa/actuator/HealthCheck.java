@@ -17,7 +17,7 @@ public class HealthCheck implements HealthIndicator, Health {
     private static final Marker TECHNICAL = MarkerFactory.getMarker("TECHNICAL");
 	private static final Logger logger = LoggerFactory.getLogger(HealthCheck.class);
 	
-	Map<String,HealthInfo> health = new HashMap<>();
+	final Map<String,HealthInfo> health = new HashMap<>();
   
     @Override
     public org.springframework.boot.actuate.health.Health health() {

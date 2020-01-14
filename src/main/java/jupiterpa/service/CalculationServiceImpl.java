@@ -9,9 +9,9 @@ import jupiterpa.model.*;
 @Service
 public class CalculationServiceImpl implements CalculationService {
     @Autowired
-    SettingsService settings;
+    final SettingsService settings;
     @Autowired
-    UtilityService utility;
+    final UtilityService utility;
 
     public CalculationServiceImpl(SettingsService settings, UtilityService utility) {
         this.settings = settings;
