@@ -1,4 +1,4 @@
-package jupiterpa.service;
+package jupiterpa.util;
 
 import jupiterpa.model.PlayerCharacter;
 import jupiterpa.model.PlayerCharacterEntity;
@@ -33,7 +33,7 @@ public class TestCreation {
         return c;
     }
 
-    public static PlayerCharacter getExpectedCharacter(UUID id) {
+    public static PlayerCharacter getExpectedCharacter(long id) {
         PlayerCharacter exp = new PlayerCharacter();
         exp.setId( id );
         exp.setName( "Name" );
@@ -54,7 +54,7 @@ public class TestCreation {
         return exp;
     }
 
-    public static Skill getExpectedSkill(String name, UUID id) {
+    public static Skill getExpectedSkill(String name, long id) {
         Skill skill = new Skill();
         if (name.equals("Klettern")) {
             skill.setCharacterId(id);

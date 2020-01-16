@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Data @NoArgsConstructor
 public class Skill {
-    UUID characterId;
+    long characterId;
     String name;
 
     int level;

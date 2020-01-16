@@ -3,6 +3,7 @@ package jupiterpa.service;
 import jupiterpa.model.PlayerCharacter;
 import jupiterpa.model.PlayerCharacterEntity;
 import jupiterpa.model.Skill;
+import jupiterpa.util.TestCreation;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

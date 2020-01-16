@@ -2,9 +2,11 @@ package jupiterpa.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.UUID;
 
 import jupiterpa.model.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CalculationServiceImpl implements CalculationService {
@@ -12,6 +14,8 @@ public class CalculationServiceImpl implements CalculationService {
     final SettingsService settings;
     @Autowired
     final UtilityService utility;
+
+    static long next = 1L;
 
     public CalculationServiceImpl(SettingsService settings, UtilityService utility) {
         this.settings = settings;
@@ -29,11 +33,10 @@ public class CalculationServiceImpl implements CalculationService {
         checkAttribute( character.getGw() );
         checkAttribute( character.getGs() );
 
+        // Base Fields
         PlayerCharacter c = new PlayerCharacter();
-        // ID and Level
-        c.setId(UUID.randomUUID());
+        c.setId(next); next++;
         c.setName( character.getName() );
-
         c.setClassName( character.getClassName() );
         if (character.getLevel() == 0)
             c.setLevel(1);
@@ -155,6 +158,36 @@ public class CalculationServiceImpl implements CalculationService {
         }
 
         return new Cost(gold,ep,practice,te,le);
+    }
+    public PlayerCharacterEntity condense(PlayerCharacter character)  {
+        PlayerCharacterEntity entity = new PlayerCharacterEntity();
+        entity.setId(character.getId());
+        entity.setName(character.getName());
+        entity.setClassName(character.getClassName());
+        entity.setLevel(character.getLevel());
+        entity.setNotSpentEp(character.getNotSpentEp());
+        entity.setTotalEp(character.getTotalEp());
+        entity.setGold(character.getGold());
+        entity.setSt(character.getSt());
+        entity.setKo(character.getKo());
+        entity.setGw(character.getGw());
+        entity.setGs(character.getGs());
+
+        List<SkillEntity> skills = new ArrayList<>();
+        for (Skill skill : character.getSkills() ) {
+            if (skill.isLearned()) {
+                SkillEntity s = new SkillEntity();
+                s.setCharacterId(skill.getCharacterId());
+                s.setName(skill.getName());
+                s.setLevel(skill.getLevel());
+                s.setBaseAttribute(skill.getBaseAttribute());
+                s.setPractice(skill.getPractice());
+                skills.add(s);
+            }
+        }
+        entity.setSkills(skills);
+
+        return entity;
     }
 
 }

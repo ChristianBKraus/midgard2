@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Data @NoArgsConstructor
 public class PlayerCharacter {
-    UUID id;
+    long id;
     String name;
 
     String className;

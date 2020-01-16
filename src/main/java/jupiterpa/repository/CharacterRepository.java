@@ -1,13 +1,15 @@
 package jupiterpa.repository;
 
-import jupiterpa.model.PlayerCharacter;
+import jupiterpa.model.PlayerCharacterEntity;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface CharacterRepository extends MongoRepository<PlayerCharacter,String> {
-    List<PlayerCharacter> findByName(String name);
-    Optional<PlayerCharacter> findById(UUID id);
+@Document
+public interface CharacterRepository extends MongoRepository<PlayerCharacterEntity,String> {
+    List<PlayerCharacterEntity> findByName(String name);
+    Optional<PlayerCharacterEntity> findById(UUID id);
 }

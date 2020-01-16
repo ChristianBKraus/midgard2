@@ -13,9 +13,9 @@ import java.util.Map;
 import static org.springframework.boot.actuate.health.Health.Builder;
 
 @Component
-public class HealthCheck implements HealthIndicator, Health {
+public class HealthImpl implements HealthIndicator, Health {
     private static final Marker TECHNICAL = MarkerFactory.getMarker("TECHNICAL");
-	private static final Logger logger = LoggerFactory.getLogger(HealthCheck.class);
+	private static final Logger logger = LoggerFactory.getLogger(HealthImpl.class);
 	
 	final Map<String,HealthInfo> health = new HashMap<>();
   

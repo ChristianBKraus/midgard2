@@ -2,6 +2,7 @@ package jupiterpa.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,8 @@ import java.util.UUID;
 
 @Data @NoArgsConstructor
 public class PlayerCharacterEntity {
-    UUID id;
+    @Id
+    long id;
     String name;
 
     String className;

@@ -1,5 +1,7 @@
 package jupiterpa.controller;
 
+import jupiterpa.actuator.Health;
+import jupiterpa.actuator.HealthInfo;
 import jupiterpa.model.PlayerCharacter;
 import jupiterpa.model.Cost;
 import jupiterpa.model.PlayerCharacterEntity;
@@ -9,6 +11,7 @@ import jupiterpa.service.CalculationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,16 +26,43 @@ public class Controller {
     @Autowired
     LearningServiceImpl costService;
     @Autowired
-    CalculationServiceImpl createService;
+    CalculationServiceImpl calculationService;
+    @Autowired
+    Health health;
 
     @GetMapping("/character")
-    public List<PlayerCharacter> getCharacters() {
-        return characterRepo.findAll();
+    public List<PlayerCharacterInfo> getCharacters() {
+        List<PlayerCharacterEntity> entities = characterRepo.findAll();
+        List<PlayerCharacterInfo> characters = new ArrayList<>();
+        for (PlayerCharacterEntity entity : entities) {
+            PlayerCharacterInfo c = new PlayerCharacterInfo();
+            c.setId(entity.getId());
+            c.setName(entity.getName());
+            c.setClassName(entity.getClassName());
+            c.setLevel(entity.getLevel());
+            characters.add(c);
+        }
+        return characters;
+
     }
 
     @GetMapping("/character/{name}")
-    public List<PlayerCharacter> getCharacters(@PathVariable String name) {
-        return characterRepo.findByName(name);
+    public List<PlayerCharacter> getCharacters(@PathVariable String name) throws Exception {
+        List<PlayerCharacterEntity> entities = characterRepo.findAll();
+        List<PlayerCharacter> characters = new ArrayList<>();
+        for (PlayerCharacterEntity entity : entities) {
+            PlayerCharacter c = calculationService.enrich(entity);
+            characters.add(c);
+        }
+        return characters;
+    }
+
+    @PostMapping("/character")
+    public PlayerCharacter create(@RequestBody PlayerCharacterEntity playerCharacter) throws Exception {
+        PlayerCharacter enrichedPlayerCharacter = calculationService.enrich(playerCharacter);
+        playerCharacter = calculationService.condense(enrichedPlayerCharacter);
+        characterRepo.save(playerCharacter);
+        return enrichedPlayerCharacter;
     }
 
     @PostMapping("/character/{characterId}/learn/{skill}/{gold}")
@@ -43,23 +73,21 @@ public class Controller {
                 ) throws Exception {
 
         // Read corresponding character
-        Optional<PlayerCharacter> co = characterRepo.findById(characterId);
+        Optional<PlayerCharacterEntity> co = characterRepo.findById(characterId);
         if (! co.isPresent()) throw new Exception("Character does not exist");
-        PlayerCharacter c = co.get();
+        PlayerCharacterEntity entity = co.get();
+
+        // Enrich
+        PlayerCharacter c = calculationService.enrich(entity);
 
         // Learn
         Cost cost = costService.learn(c, skill, gold);
 
         // Save
-        characterRepo.save(c);
+        entity = calculationService.condense(c);
+        characterRepo.save(entity);
 
         return cost;
-    }
-
-    @PostMapping("/character")
-    public PlayerCharacter create(@RequestBody PlayerCharacterEntity playerCharacter) throws Exception {
-        PlayerCharacter enrichedPlayerCharacter = createService.enrich(playerCharacter);
-        return characterRepo.save(enrichedPlayerCharacter);
     }
 
 }
