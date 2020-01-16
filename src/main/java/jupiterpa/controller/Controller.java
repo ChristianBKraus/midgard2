@@ -1,13 +1,11 @@
 package jupiterpa.controller;
 
-import jupiterpa.actuator.Health;
-import jupiterpa.actuator.HealthInfo;
-import jupiterpa.model.PlayerCharacter;
 import jupiterpa.model.Cost;
+import jupiterpa.model.PlayerCharacter;
 import jupiterpa.model.PlayerCharacterEntity;
 import jupiterpa.repository.CharacterRepository;
-import jupiterpa.service.LearningServiceImpl;
 import jupiterpa.service.CalculationServiceImpl;
+import jupiterpa.service.LearningServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +25,6 @@ public class Controller {
     LearningServiceImpl costService;
     @Autowired
     CalculationServiceImpl calculationService;
-    @Autowired
-    Health health;
 
     @GetMapping("/character")
     public List<PlayerCharacterInfo> getCharacters() {
