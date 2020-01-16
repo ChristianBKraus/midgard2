@@ -60,8 +60,8 @@ public class CalculationTest {
         PlayerCharacter character = service.enrich(entity);
         PlayerCharacterEntity condensed = service.condense(character);
         entity.setLevel(1);
-        entity.setId(1L);
-        entity.getSkills().get(0).setCharacterId(1L);
+        entity.setId(condensed.getId());
+        entity.getSkills().get(0).setCharacterId(condensed.getId());
         assertThat(condensed, is(entity));
     }
 }

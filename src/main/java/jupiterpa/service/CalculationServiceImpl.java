@@ -15,7 +15,7 @@ public class CalculationServiceImpl implements CalculationService {
     @Autowired
     final UtilityService utility;
 
-    static long next = 1L;
+    public static long next = 1L;
 
     public CalculationServiceImpl(SettingsService settings, UtilityService utility) {
         this.settings = settings;
