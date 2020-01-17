@@ -1,8 +1,10 @@
 ### Patches 
-- Remove ID from Skill --> only needed for Header
+- [x] Remove ID from Skill --> only needed for Header
 - Enforce uniqueness of ID of Header
 
 ### Backlog
-- Security
-- AOP (Security and Logging)
+- [x] Security API
+- [x] AOP (Security and Logging)
+- Security on user level
 - Swagger-Support
+- User friendly error handling
