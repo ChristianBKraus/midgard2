@@ -7,3 +7,4 @@
 - [x] AOP (Security and Logging)
 - Security on user level
 - Swagger-Support
+- User friendly error handling
