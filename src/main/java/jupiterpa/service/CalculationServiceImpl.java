@@ -37,6 +37,7 @@ public class CalculationServiceImpl implements CalculationService {
         PlayerCharacter c = new PlayerCharacter();
         c.setId(next); next++;
         c.setName( character.getName() );
+        c.setUser( character.getUser() );
         c.setClassName( character.getClassName() );
         if (character.getLevel() == 0)
             c.setLevel(1);
@@ -163,6 +164,7 @@ public class CalculationServiceImpl implements CalculationService {
         PlayerCharacterEntity entity = new PlayerCharacterEntity();
         entity.setId(character.getId());
         entity.setName(character.getName());
+        entity.setUser(character.getUser());
         entity.setClassName(character.getClassName());
         entity.setLevel(character.getLevel());
         entity.setNotSpentEp(character.getNotSpentEp());

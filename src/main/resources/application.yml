@@ -3,3 +3,4 @@ application:
   description: Midgard Steigerung
   version: 0.0.1
   adminPassword: admin
+  userPassword: user

@@ -13,6 +13,7 @@ public class PlayerCharacterEntity {
     @Id
     long id;
     String name;
+    String user;
 
     String className;
     int level;

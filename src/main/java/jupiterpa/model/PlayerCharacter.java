@@ -11,6 +11,7 @@ import java.util.UUID;
 public class PlayerCharacter {
     long id;
     String name;
+    String user;
 
     String className;
     int level;

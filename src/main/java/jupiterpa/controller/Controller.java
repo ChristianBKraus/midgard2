@@ -4,9 +4,12 @@ import jupiterpa.model.Cost;
 import jupiterpa.model.PlayerCharacter;
 import jupiterpa.model.PlayerCharacterEntity;
 import jupiterpa.repository.CharacterRepository;
+import jupiterpa.security.SecurityService;
+import jupiterpa.security.UserStore;
 import jupiterpa.service.CalculationServiceImpl;
 import jupiterpa.service.LearningServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,6 +28,8 @@ public class Controller {
     LearningServiceImpl costService;
     @Autowired
     CalculationServiceImpl calculationService;
+    @Autowired
+    SecurityService security;
 
     @GetMapping("/character")
     public List<PlayerCharacterInfo> getCharacters() {
@@ -36,7 +41,8 @@ public class Controller {
             c.setName(entity.getName());
             c.setClassName(entity.getClassName());
             c.setLevel(entity.getLevel());
-            characters.add(c);
+            if (security.allowed(entity.getUser()))
+                characters.add(c);
         }
         return characters;
 
@@ -48,13 +54,15 @@ public class Controller {
         List<PlayerCharacter> characters = new ArrayList<>();
         for (PlayerCharacterEntity entity : entities) {
             PlayerCharacter c = calculationService.enrich(entity);
-            characters.add(c);
+            if (security.allowed(c.getUser()))
+                characters.add(c);
         }
         return characters;
     }
 
     @PostMapping("/character")
     public PlayerCharacter create(@RequestBody PlayerCharacterEntity playerCharacter) throws Exception {
+        playerCharacter.setUser( security.getUser() ); // Set User
         PlayerCharacter enrichedPlayerCharacter = calculationService.enrich(playerCharacter);
         playerCharacter = calculationService.condense(enrichedPlayerCharacter);
         characterRepo.save(playerCharacter);
@@ -72,6 +80,8 @@ public class Controller {
         Optional<PlayerCharacterEntity> co = characterRepo.findById(characterId);
         if (! co.isPresent()) throw new Exception("Character does not exist");
         PlayerCharacterEntity entity = co.get();
+
+        security.check(entity.getUser());
 
         // Enrich
         PlayerCharacter c = calculationService.enrich(entity);

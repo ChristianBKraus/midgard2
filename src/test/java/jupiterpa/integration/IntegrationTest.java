@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -42,10 +43,12 @@ public class IntegrationTest {
         repo.deleteAll();
     }
 
+    @WithMockUser()
     @Test
     public void getCharacters() throws Exception {
         // given
         PlayerCharacterEntity ch = TestCreation.create();
+        ch.setUser("user");
         repo.save(ch);
 
         // when
@@ -68,10 +71,12 @@ public class IntegrationTest {
 
     }
 
+    @WithMockUser()
     @Test
     public void getCharacterByName() throws Exception {
         // given
         PlayerCharacterEntity ch = TestCreation.create();
+        ch.setUser("user");
         repo.save(ch);
 
         // when
@@ -95,6 +100,7 @@ public class IntegrationTest {
 
     }
 
+    @WithMockUser()
     @Test
     public void postCharacter() throws Exception {
 
@@ -122,6 +128,62 @@ public class IntegrationTest {
                 .andExpect(jsonPath("$[0].st").value(entity.getSt()))
                 .andExpect(jsonPath("$[0].skills[0].name").value("Klettern")
                 );
+
+    }
+
+    @WithMockUser( value = "admin")
+    @Test
+    public void adminsCanGetForeignCharacters() throws Exception {
+        // given
+        PlayerCharacterEntity ch = TestCreation.create();
+        ch.setUser("user");
+        repo.save(ch);
+
+        // when
+        List<PlayerCharacterEntity> found =
+                repo.findByName("Name");
+
+        // then (Repository)
+        assertThat(found.size(),is(1));
+        PlayerCharacterEntity entity = found.get(0);
+        assertThat(entity,is(ch));
+
+        // then Web
+        mvc.perform(get("/api/character")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(jsonPath("$[0].name").value(ch.getName()));
+
+    }
+
+    @WithMockUser()
+    @Test
+    public void usersCannotGetForeignCharacters() throws Exception {
+        // given
+        PlayerCharacterEntity ch = TestCreation.create();
+        ch.setUser("admin");
+        repo.save(ch);
+
+        // when
+        List<PlayerCharacterEntity> found =
+                repo.findByName("Name");
+
+        // then (Repository)
+        assertThat(found.size(),is(1));
+        PlayerCharacterEntity entity = found.get(0);
+        assertThat(entity,is(ch));
+
+        // then Web
+        mvc.perform(get("/api/character")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(content().string("[]"));
 
     }
 }
