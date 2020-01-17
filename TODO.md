@@ -5,6 +5,6 @@
 ### Backlog
 - [x] Security API
 - [x] AOP (Security and Logging)
-- Security on user level
+- [x] Security on user level
 - Swagger-Support
 - User friendly error handling
