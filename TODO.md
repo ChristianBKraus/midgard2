@@ -8,3 +8,7 @@
 - [x] Security on user level
 - Swagger-Support
 - User friendly error handling
+- Complete attributes, AP, ...
+- Complete settings 
+- Level up
+
