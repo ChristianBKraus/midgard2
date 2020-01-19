@@ -6,7 +6,7 @@
 - [x] Security API
 - [x] AOP (Security and Logging)
 - [x] Security on user level
-- Swagger-Support
+- [x] Swagger-Support
 - User friendly error handling
 - Complete attributes, AP, ...
 - Complete settings 
