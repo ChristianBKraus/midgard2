@@ -11,4 +11,5 @@
 - Complete attributes, AP, ...
 - Complete settings 
 - Level up
+- remove unlearned
 
