@@ -20,7 +20,7 @@ public class CalculationServiceImpl implements CalculationService {
         this.utility = utility;
     }
 
-    public PlayerCharacter enrich(PlayerCharacterEntity character) throws Exception {
+    public PlayerCharacter enrich(PlayerCharacter character) throws Exception {
         // Checks
         if (! settings.getClasses().contains(character.getClassName()) ) {
             throw new Exception("Class " + character.getClassName() + " not found");
@@ -32,51 +32,42 @@ public class CalculationServiceImpl implements CalculationService {
         checkAttribute( character.getGs() );
 
         // Base Fields
-        PlayerCharacter c = new PlayerCharacter();
-        c.setName( character.getName() );
-        c.setUser( character.getUser() );
-        c.setClassName( character.getClassName() );
         if (character.getLevel() == 0)
-            c.setLevel(1);
-        else
-          c.setLevel( character.getLevel() );
-        c.setNotSpentEp( character.getNotSpentEp() );
-        c.setTotalEp( character.getTotalEp() );
+            character.setLevel(1);
 
         // Attributes
-        c.setSt( character.getSt() );
-        c.setKo( character.getKo() );
-        c.setGw( character.getGw() );
-        c.setGs( character.getGs() );
 
         // Attribute Bonus
-        c.setStBonus(getBonus(c.getSt()));
-        c.setKoBonus(getBonus(c.getKo()));
-        c.setGwBonus(getBonus(c.getGw()));
-        c.setGsBonus(getBonus(c.getGs()));
+        character.setStBonus(getBonus(character.getSt()));
+        character.setKoBonus(getBonus(character.getKo()));
+        character.setGwBonus(getBonus(character.getGw()));
+        character.setGsBonus(getBonus(character.getGs()));
 
         //// Skills
+        List<Skill> enrichedSkills = new ArrayList<>();
         for (Skill defaultSkill : settings.getDefaultSkills()) {
             Skill skill = new Skill();
-            if (! utility.existSkillEntity(character.getSkills(), defaultSkill.getName()) ) {
+            if (! utility.existSkill(character.getSkills(), defaultSkill.getName()) ) {
                 // Skill does not exist for character --> use default
                 skill.setName( defaultSkill.getName() );
                 skill.setLevel( defaultSkill.getLevel() );
                 skill.setPractice(0);
                 skill.setLearned(false);
             } else {
-                SkillEntity se = utility.findSkillEntity(character.getSkills(),defaultSkill.getName());
+                Skill se = utility.findSkill(character.getSkills(),defaultSkill.getName());
                 skill.setName( se.getName() );
                 skill.setLevel( se.getLevel() );
                 skill.setPractice( se.getPractice() );
                 skill.setLearned(true);
             }
-            c.getSkills().add(skill);
             // enrich raw skills data
-            enrichSkill(skill, c);
-        }
+            enrichSkill(skill, character);
 
-        return c;
+            enrichedSkills.add(skill);
+        }
+        character.setSkills(enrichedSkills);
+
+        return character;
     }
 
     private void checkAttribute(int attr) throws Exception {
@@ -142,7 +133,8 @@ public class CalculationServiceImpl implements CalculationService {
         int practice;
         if (s.isLearned()) {
             int newBonus = s.getLevel() + 1;
-            CostsMain costsMain = settings.getMainCosts().get(costsSkill.getCostRow() + "/" + newBonus);
+            String key = costsSkill.getCostRow() + "/" + newBonus;
+            CostsMain costsMain = settings.getMainCosts().get(key);
             te = costsMain.getMultiplier();
 
             practice = Math.min(te, s.getPractice());
@@ -156,34 +148,4 @@ public class CalculationServiceImpl implements CalculationService {
 
         return new Cost(gold,ep,practice,te,le);
     }
-    public PlayerCharacterEntity condense(PlayerCharacter character)  {
-        PlayerCharacterEntity entity = new PlayerCharacterEntity();
-        entity.setName(character.getName());
-        entity.setUser(character.getUser());
-        entity.setClassName(character.getClassName());
-        entity.setLevel(character.getLevel());
-        entity.setNotSpentEp(character.getNotSpentEp());
-        entity.setTotalEp(character.getTotalEp());
-        entity.setGold(character.getGold());
-        entity.setSt(character.getSt());
-        entity.setKo(character.getKo());
-        entity.setGw(character.getGw());
-        entity.setGs(character.getGs());
-
-        List<SkillEntity> skills = new ArrayList<>();
-        for (Skill skill : character.getSkills() ) {
-            if (skill.isLearned()) {
-                SkillEntity s = new SkillEntity();
-                s.setName(skill.getName());
-                s.setLevel(skill.getLevel());
-                s.setBaseAttribute(skill.getBaseAttribute());
-                s.setPractice(skill.getPractice());
-                skills.add(s);
-            }
-        }
-        entity.setSkills(skills);
-
-        return entity;
-    }
-
 }

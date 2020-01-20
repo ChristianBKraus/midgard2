@@ -2,7 +2,6 @@ package jupiterpa.controller;
 
 import jupiterpa.model.Cost;
 import jupiterpa.model.PlayerCharacter;
-import jupiterpa.model.PlayerCharacterEntity;
 import jupiterpa.repository.CharacterRepository;
 import jupiterpa.security.SecurityService;
 import jupiterpa.service.CalculationServiceImpl;
@@ -30,9 +29,9 @@ public class Controller {
 
     @GetMapping("/character")
     public List<PlayerCharacterInfo> getCharacters() {
-        List<PlayerCharacterEntity> entities = characterRepo.findAll();
+        List<PlayerCharacter> entities = characterRepo.findAll();
         List<PlayerCharacterInfo> characters = new ArrayList<>();
-        for (PlayerCharacterEntity entity : entities) {
+        for (PlayerCharacter entity : entities) {
             PlayerCharacterInfo c = new PlayerCharacterInfo();
             c.setName(entity.getName());
             c.setClassName(entity.getClassName());
@@ -46,7 +45,7 @@ public class Controller {
 
     @GetMapping("/character/{name}")
     public PlayerCharacter getCharacters(@PathVariable String name) throws Exception {
-        Optional<PlayerCharacterEntity> entity = characterRepo.findByName(name);
+        Optional<PlayerCharacter> entity = characterRepo.findByName(name);
         if (entity.isPresent()) {
             PlayerCharacter c = calculationService.enrich(entity.get());
             if (security.allowed(c.getUser()))
@@ -58,12 +57,13 @@ public class Controller {
     }
 
     @PostMapping("/character")
-    public PlayerCharacter create(@RequestBody PlayerCharacterEntity playerCharacter) throws Exception {
+    public PlayerCharacter create(@RequestBody PlayerCharacter playerCharacter) throws Exception {
         playerCharacter.setUser( security.getUser() ); // Set User
-        PlayerCharacter enrichedPlayerCharacter = calculationService.enrich(playerCharacter);
-        playerCharacter = calculationService.condense(enrichedPlayerCharacter);
-        characterRepo.save(playerCharacter);
-        return enrichedPlayerCharacter;
+        playerCharacter = calculationService.enrich(playerCharacter); // for checks
+        playerCharacter.getSkills().removeIf( s -> !s.isLearned());
+        playerCharacter = characterRepo.save(playerCharacter); // save
+        playerCharacter = calculationService.enrich(playerCharacter); // enrich again for return parameter
+        return playerCharacter;
     }
 
     @PostMapping("/character/{name}/learn/{skill}/{gold}")
@@ -74,21 +74,20 @@ public class Controller {
                 ) throws Exception {
 
         // Read corresponding character
-        Optional<PlayerCharacterEntity> co = characterRepo.findByName(name);
+        Optional<PlayerCharacter> co = characterRepo.findByName(name);
         if (! co.isPresent()) throw new Exception("Character does not exist");
-        PlayerCharacterEntity entity = co.get();
+        PlayerCharacter character = co.get();
 
-        security.check(entity.getUser());
+        security.check(character.getUser());
 
         // Enrich
-        PlayerCharacter c = calculationService.enrich(entity);
+        character = calculationService.enrich(character);
 
         // Learn
-        Cost cost = costService.learn(c, skill, gold);
+        Cost cost = costService.learn(character, skill, gold);
 
         // Save
-        entity = calculationService.condense(c);
-        characterRepo.save(entity);
+        characterRepo.save(character);
 
         return cost;
     }

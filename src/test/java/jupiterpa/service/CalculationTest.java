@@ -1,7 +1,6 @@
 package jupiterpa.service;
 
 import jupiterpa.model.PlayerCharacter;
-import jupiterpa.model.PlayerCharacterEntity;
 import jupiterpa.model.Skill;
 import jupiterpa.util.TestCreation;
 import org.junit.Before;
@@ -31,7 +30,7 @@ public class CalculationTest {
     @Test
     public void test() throws Exception {
         // Test Input
-        PlayerCharacterEntity entity = TestCreation.create();
+        PlayerCharacter entity = TestCreation.create();
 
         // Process
         PlayerCharacter act = service.enrich(entity);
@@ -53,12 +52,4 @@ public class CalculationTest {
         assertThat( reiten, is( TestCreation.getExpectedSkill("Reiten")));
     }
 
-    @Test
-    public void condense() throws Exception {
-        PlayerCharacterEntity entity = TestCreation.create();
-        PlayerCharacter character = service.enrich(entity);
-        PlayerCharacterEntity condensed = service.condense(character);
-        entity.setLevel(1);
-        assertThat(condensed, is(entity));
-    }
 }

@@ -1,9 +1,10 @@
 package jupiterpa.integration;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jupiterpa.Application;
+import jupiterpa.model.PlayerCharacter;
+import jupiterpa.repository.CharacterRepository;
+import jupiterpa.util.TestCreation;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -22,11 +24,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import jupiterpa.Application;
-import jupiterpa.model.PlayerCharacterEntity;
-import jupiterpa.repository.CharacterRepository;
-import jupiterpa.util.TestCreation;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -48,12 +45,12 @@ public class IntegrationTest {
     @Test
     public void getCharacters() throws Exception {
         // given
-        PlayerCharacterEntity ch = TestCreation.create();
+        PlayerCharacter ch = TestCreation.create();
         ch.setUser("user");
         repo.save(ch);
 
         // when
-        Optional<PlayerCharacterEntity> found =
+        Optional<PlayerCharacter> found =
                 repo.findByName("Name");
 
         // then (Repository)
@@ -74,17 +71,17 @@ public class IntegrationTest {
     @Test
     public void getCharacterByName() throws Exception {
         // given
-        PlayerCharacterEntity ch = TestCreation.create();
+        PlayerCharacter ch = TestCreation.create();
         ch.setUser("user");
         repo.save(ch);
 
         // when
-        Optional<PlayerCharacterEntity> found =
+        Optional<PlayerCharacter> found =
                 repo.findByName("Name");
 
         // then Repository
         assertThat(found.isPresent(),is(true));
-        PlayerCharacterEntity entity = found.orElse(null);
+        PlayerCharacter entity = found.orElse(null);
         assert entity != null;
 
         // then web
@@ -103,7 +100,7 @@ public class IntegrationTest {
     @Test
     public void postCharacter() throws Exception {
 
-        PlayerCharacterEntity entity = TestCreation.create();
+        PlayerCharacter entity = TestCreation.create();
         ObjectMapper mapper = new ObjectMapper();
         String json =mapper.writeValueAsString(entity);
 
@@ -134,17 +131,17 @@ public class IntegrationTest {
     @Test
     public void adminsCanGetForeignCharacters() throws Exception {
         // given
-        PlayerCharacterEntity ch = TestCreation.create();
+        PlayerCharacter ch = TestCreation.create();
         ch.setUser("user");
         repo.save(ch);
 
         // when
-        Optional<PlayerCharacterEntity> found =
+        Optional<PlayerCharacter> found =
                 repo.findByName("Name");
 
         // then (Repository)
         assertThat(found.isPresent(),is(true));
-        PlayerCharacterEntity entity = found.orElse(null);
+        PlayerCharacter entity = found.orElse(null);
         assert entity != null;
 
         // then Web
@@ -162,17 +159,17 @@ public class IntegrationTest {
     @Test
     public void usersCannotGetForeignCharacters() throws Exception {
         // given
-        PlayerCharacterEntity ch = TestCreation.create();
+        PlayerCharacter ch = TestCreation.create();
         ch.setUser("admin");
         repo.save(ch);
 
         // when
-        Optional<PlayerCharacterEntity> found =
+        Optional<PlayerCharacter> found =
                 repo.findByName("Name");
 
         // then (Repository)
         assertThat(found.isPresent(),is(true));
-        PlayerCharacterEntity entity = found.orElse(null);
+        PlayerCharacter entity = found.orElse(null);
         assert entity != null;
         assertThat(entity,is(ch));
 

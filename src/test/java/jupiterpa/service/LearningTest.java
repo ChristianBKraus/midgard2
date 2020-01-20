@@ -1,7 +1,6 @@
 package jupiterpa.service;
 
 import jupiterpa.model.PlayerCharacter;
-import jupiterpa.model.PlayerCharacterEntity;
 import jupiterpa.model.Skill;
 import jupiterpa.util.TestCreation;
 import org.junit.Test;
@@ -22,7 +21,7 @@ public class LearningTest {
         calculation = new CalculationServiceImpl(settings,utility);
         learning = new LearningServiceImpl(settings, utility, calculation);
 
-        PlayerCharacterEntity ce = TestCreation.create();
+        PlayerCharacter ce = TestCreation.create();
         return calculation.enrich( ce );
     }
 

@@ -2,6 +2,7 @@ package jupiterpa.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Transient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +23,13 @@ public class PlayerCharacter {
     int gw;
     int gs;
 
+    @Transient
     int stBonus;
+    @Transient
     int koBonus;
+    @Transient
     int gwBonus;
+    @Transient
     int gsBonus;
 
     List<Skill> skills = new ArrayList<>();

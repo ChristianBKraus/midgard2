@@ -1,27 +1,25 @@
 package jupiterpa.util;
 
 import jupiterpa.model.PlayerCharacter;
-import jupiterpa.model.PlayerCharacterEntity;
 import jupiterpa.model.Skill;
-import jupiterpa.model.SkillEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestCreation {
 
-    public static PlayerCharacterEntity create() {
-        PlayerCharacterEntity c = new PlayerCharacterEntity();
+    public static PlayerCharacter create() {
+        PlayerCharacter c = new PlayerCharacter();
         c.setName("Name");
         c.setClassName("Krieger");
         c.setSt(2);
         c.setKo(10);
         c.setGs(90);
         c.setGw(99);
-        List<SkillEntity> skills = new ArrayList<>();
+        List<Skill> skills = new ArrayList<>();
 
 
-        SkillEntity s = new SkillEntity();
+        Skill s = new Skill();
         s.setName("Klettern");
         s.setLevel(12);
         s.setBaseAttribute("Gs");
