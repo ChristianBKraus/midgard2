@@ -5,11 +5,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Data @NoArgsConstructor
 public class PlayerCharacter {
-    long id;
     String name;
     String user;
 

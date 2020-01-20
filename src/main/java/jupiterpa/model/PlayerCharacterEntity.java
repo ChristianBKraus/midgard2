@@ -6,12 +6,10 @@ import org.springframework.data.annotation.Id;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Data @NoArgsConstructor
 public class PlayerCharacterEntity {
     @Id
-    long id;
     String name;
     String user;
 
@@ -25,6 +23,8 @@ public class PlayerCharacterEntity {
     int ko;
     int gw;
     int gs;
+
+    int stBonus;
 
     List<SkillEntity> skills = new ArrayList<>();
 }

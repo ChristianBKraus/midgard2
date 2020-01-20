@@ -1,6 +1,7 @@
 package jupiterpa.integration;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -52,13 +53,11 @@ public class IntegrationTest {
         repo.save(ch);
 
         // when
-        List<PlayerCharacterEntity> found =
+        Optional<PlayerCharacterEntity> found =
                 repo.findByName("Name");
 
         // then (Repository)
-        assertThat(found.size(),is(1));
-        PlayerCharacterEntity entity = found.get(0);
-        assertThat(entity,is(ch));
+        assertThat(found.isPresent(),is(true));
 
         // then Web
         mvc.perform(get("/api/character")
@@ -80,13 +79,13 @@ public class IntegrationTest {
         repo.save(ch);
 
         // when
-        List<PlayerCharacterEntity> found =
+        Optional<PlayerCharacterEntity> found =
                 repo.findByName("Name");
 
         // then Repository
-        assertThat(found.size(),is(1));
-        PlayerCharacterEntity entity = found.get(0);
-        assertThat(entity,is(ch));
+        assertThat(found.isPresent(),is(true));
+        PlayerCharacterEntity entity = found.orElse(null);
+        assert entity != null;
 
         // then web
         mvc.perform(get("/api/character/Name")
@@ -95,8 +94,8 @@ public class IntegrationTest {
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(jsonPath("$[0].name").value(entity.getName()))
-                .andExpect(jsonPath("$[0].st").value(entity.getSt()));
+                .andExpect(jsonPath("$.name").value(entity.getName()))
+                .andExpect(jsonPath("$.st").value(entity.getSt()));
 
     }
 
@@ -124,9 +123,9 @@ public class IntegrationTest {
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(jsonPath("$[0].name").value(entity.getName()))
-                .andExpect(jsonPath("$[0].st").value(entity.getSt()))
-                .andExpect(jsonPath("$[0].skills[0].name").value("Klettern")
+                .andExpect(jsonPath("$.name").value(entity.getName()))
+                .andExpect(jsonPath("$.st").value(entity.getSt()))
+                .andExpect(jsonPath("$.skills[0].name").value("Klettern")
                 );
 
     }
@@ -140,13 +139,13 @@ public class IntegrationTest {
         repo.save(ch);
 
         // when
-        List<PlayerCharacterEntity> found =
+        Optional<PlayerCharacterEntity> found =
                 repo.findByName("Name");
 
         // then (Repository)
-        assertThat(found.size(),is(1));
-        PlayerCharacterEntity entity = found.get(0);
-        assertThat(entity,is(ch));
+        assertThat(found.isPresent(),is(true));
+        PlayerCharacterEntity entity = found.orElse(null);
+        assert entity != null;
 
         // then Web
         mvc.perform(get("/api/character")
@@ -168,12 +167,13 @@ public class IntegrationTest {
         repo.save(ch);
 
         // when
-        List<PlayerCharacterEntity> found =
+        Optional<PlayerCharacterEntity> found =
                 repo.findByName("Name");
 
         // then (Repository)
-        assertThat(found.size(),is(1));
-        PlayerCharacterEntity entity = found.get(0);
+        assertThat(found.isPresent(),is(true));
+        PlayerCharacterEntity entity = found.orElse(null);
+        assert entity != null;
         assertThat(entity,is(ch));
 
         // then Web

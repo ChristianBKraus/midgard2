@@ -7,7 +7,6 @@ import jupiterpa.model.SkillEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class TestCreation {
 
@@ -33,9 +32,8 @@ public class TestCreation {
         return c;
     }
 
-    public static PlayerCharacter getExpectedCharacter(long id) {
+    public static PlayerCharacter getExpectedCharacter() {
         PlayerCharacter exp = new PlayerCharacter();
-        exp.setId( id );
         exp.setName( "Name" );
         exp.setClassName( "Krieger" );
         exp.setLevel(1);
@@ -54,10 +52,9 @@ public class TestCreation {
         return exp;
     }
 
-    public static Skill getExpectedSkill(String name, long id) {
+    public static Skill getExpectedSkill(String name) {
         Skill skill = new Skill();
         if (name.equals("Klettern")) {
-            skill.setCharacterId(id);
             skill.setName("Klettern");
             skill.setLevel(12);
             skill.setBaseAttribute("Gs");
@@ -71,7 +68,6 @@ public class TestCreation {
             skill.setLearned(true);
         }
         if (name.equals("Reiten")) {
-            skill.setCharacterId(id);
             skill.setName("Reiten");
             skill.setLevel(2);
             skill.setBaseAttribute("Gs");

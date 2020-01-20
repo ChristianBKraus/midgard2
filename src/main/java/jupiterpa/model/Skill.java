@@ -3,11 +3,8 @@ package jupiterpa.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Data @NoArgsConstructor
 public class Skill {
-    long characterId;
     String name;
 
     int level;

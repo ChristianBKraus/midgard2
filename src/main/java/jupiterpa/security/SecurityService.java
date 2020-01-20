@@ -19,8 +19,6 @@ public class SecurityService {
     public boolean allowed(String user) {
         String authUser = UserStore.getUser().getUsername();
         Collection<GrantedAuthority> authorities = UserStore.getUser().getAuthorities();
-        boolean admin = authorities.stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
         return (user.equals(authUser) || authUser.equals("admin") );
     }
 }

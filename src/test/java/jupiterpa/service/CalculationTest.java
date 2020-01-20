@@ -41,17 +41,16 @@ public class CalculationTest {
         act.setSkills(new ArrayList<>());
 
         // Get expected and check
-        PlayerCharacter exp = TestCreation.getExpectedCharacter(act.getId());
-        assertThat( act, equalTo(exp));
+        assertThat( act, equalTo(TestCreation.getExpectedCharacter()));
 
         // Get expected skill and check
         assertThat( skills.size(), is(2));
 
         Skill klettern = utility.findSkill(skills,"Klettern");
-        assertThat( klettern, is( TestCreation.getExpectedSkill("Klettern", act.getId())));
+        assertThat( klettern, is( TestCreation.getExpectedSkill("Klettern")));
 
         Skill reiten = utility.findSkill(skills,"Reiten");
-        assertThat( reiten, is( TestCreation.getExpectedSkill("Reiten", act.getId())));
+        assertThat( reiten, is( TestCreation.getExpectedSkill("Reiten")));
     }
 
     @Test
@@ -60,8 +59,6 @@ public class CalculationTest {
         PlayerCharacter character = service.enrich(entity);
         PlayerCharacterEntity condensed = service.condense(character);
         entity.setLevel(1);
-        entity.setId(condensed.getId());
-        entity.getSkills().get(0).setCharacterId(condensed.getId());
         assertThat(condensed, is(entity));
     }
 }

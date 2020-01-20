@@ -5,17 +5,14 @@ import jupiterpa.model.PlayerCharacter;
 import jupiterpa.model.PlayerCharacterEntity;
 import jupiterpa.repository.CharacterRepository;
 import jupiterpa.security.SecurityService;
-import jupiterpa.security.UserStore;
 import jupiterpa.service.CalculationServiceImpl;
 import jupiterpa.service.LearningServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RequestMapping(path = Controller.PATH)
 @RestController
@@ -37,7 +34,6 @@ public class Controller {
         List<PlayerCharacterInfo> characters = new ArrayList<>();
         for (PlayerCharacterEntity entity : entities) {
             PlayerCharacterInfo c = new PlayerCharacterInfo();
-            c.setId(entity.getId());
             c.setName(entity.getName());
             c.setClassName(entity.getClassName());
             c.setLevel(entity.getLevel());
@@ -49,15 +45,16 @@ public class Controller {
     }
 
     @GetMapping("/character/{name}")
-    public List<PlayerCharacter> getCharacters(@PathVariable String name) throws Exception {
-        List<PlayerCharacterEntity> entities = characterRepo.findAll();
-        List<PlayerCharacter> characters = new ArrayList<>();
-        for (PlayerCharacterEntity entity : entities) {
-            PlayerCharacter c = calculationService.enrich(entity);
+    public PlayerCharacter getCharacters(@PathVariable String name) throws Exception {
+        Optional<PlayerCharacterEntity> entity = characterRepo.findByName(name);
+        if (entity.isPresent()) {
+            PlayerCharacter c = calculationService.enrich(entity.get());
             if (security.allowed(c.getUser()))
-                characters.add(c);
-        }
-        return characters;
+                return c;
+            else
+                return null;
+        } else
+            return null;
     }
 
     @PostMapping("/character")
@@ -69,15 +66,15 @@ public class Controller {
         return enrichedPlayerCharacter;
     }
 
-    @PostMapping("/character/{characterId}/learn/{skill}/{gold}")
+    @PostMapping("/character/{name}/learn/{skill}/{gold}")
     public Cost learnSkill(
-                @PathVariable UUID characterId,
+                @PathVariable String name,
                 @PathVariable String skill,
                 @PathVariable int gold
                 ) throws Exception {
 
         // Read corresponding character
-        Optional<PlayerCharacterEntity> co = characterRepo.findById(characterId);
+        Optional<PlayerCharacterEntity> co = characterRepo.findByName(name);
         if (! co.isPresent()) throw new Exception("Character does not exist");
         PlayerCharacterEntity entity = co.get();
 

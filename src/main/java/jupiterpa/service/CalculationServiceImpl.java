@@ -15,8 +15,6 @@ public class CalculationServiceImpl implements CalculationService {
     @Autowired
     final UtilityService utility;
 
-    public static long next = 1L;
-
     public CalculationServiceImpl(SettingsService settings, UtilityService utility) {
         this.settings = settings;
         this.utility = utility;
@@ -25,7 +23,7 @@ public class CalculationServiceImpl implements CalculationService {
     public PlayerCharacter enrich(PlayerCharacterEntity character) throws Exception {
         // Checks
         if (! settings.getClasses().contains(character.getClassName()) ) {
-            throw new Exception("Class not found");
+            throw new Exception("Class " + character.getClassName() + " not found");
         }
         // check range
         checkAttribute( character.getSt() );
@@ -35,7 +33,6 @@ public class CalculationServiceImpl implements CalculationService {
 
         // Base Fields
         PlayerCharacter c = new PlayerCharacter();
-        c.setId(next); next++;
         c.setName( character.getName() );
         c.setUser( character.getUser() );
         c.setClassName( character.getClassName() );
@@ -87,7 +84,6 @@ public class CalculationServiceImpl implements CalculationService {
     }
 
     private void enrichSkill(Skill s, PlayerCharacter c) throws Exception {
-        s.setCharacterId(c.getId());
         // name
         // level
 
@@ -162,7 +158,6 @@ public class CalculationServiceImpl implements CalculationService {
     }
     public PlayerCharacterEntity condense(PlayerCharacter character)  {
         PlayerCharacterEntity entity = new PlayerCharacterEntity();
-        entity.setId(character.getId());
         entity.setName(character.getName());
         entity.setUser(character.getUser());
         entity.setClassName(character.getClassName());
@@ -179,7 +174,6 @@ public class CalculationServiceImpl implements CalculationService {
         for (Skill skill : character.getSkills() ) {
             if (skill.isLearned()) {
                 SkillEntity s = new SkillEntity();
-                s.setCharacterId(skill.getCharacterId());
                 s.setName(skill.getName());
                 s.setLevel(skill.getLevel());
                 s.setBaseAttribute(skill.getBaseAttribute());
