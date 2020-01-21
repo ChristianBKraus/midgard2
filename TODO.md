@@ -7,8 +7,9 @@
 - [x] AOP (Security and Logging)
 - [x] Security on user level
 - [x] Swagger-Support
+- [x] Complete attributes
+- [x] AP
 - User friendly error handling
-- Complete attributes, AP, ...
 - Complete settings 
 - Level up
 

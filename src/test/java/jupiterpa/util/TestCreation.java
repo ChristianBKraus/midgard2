@@ -13,9 +13,13 @@ public class TestCreation {
         c.setName("Name");
         c.setClassName("Krieger");
         c.setSt(2);
-        c.setKo(10);
         c.setGs(90);
         c.setGw(99);
+        c.setKo(10);
+        c.setIn(50);
+        c.setZt(50);
+        c.setAu(50);
+        c.setPa(50);
         List<Skill> skills = new ArrayList<>();
 
 
@@ -38,14 +42,25 @@ public class TestCreation {
         exp.setNotSpentEp(0);
         exp.setTotalEp(0);
         exp.setSt( 2 );
-        exp.setKo( 10 );
         exp.setGs( 90 );
         exp.setGw( 99 );
+        exp.setKo( 10 );
+        exp.setIn( 50 );
+        exp.setZt( 50 );
+        exp.setAu( 50 );
+        exp.setPa( 50 );
 
         exp.setStBonus(-2);
-        exp.setKoBonus(-1);
         exp.setGsBonus(1);
         exp.setGwBonus(2);
+        exp.setKoBonus(-1);
+        exp.setInBonus(0);
+        exp.setZtBonus(0);
+        exp.setAuBonus(0);
+        exp.setPaBonus(0);
+
+        exp.setApBonus(4);
+        exp.setAp(4);
 
         return exp;
     }

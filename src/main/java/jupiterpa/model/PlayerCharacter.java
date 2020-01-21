@@ -19,18 +19,27 @@ public class PlayerCharacter {
     int gold;
 
     int st;
-    int ko;
-    int gw;
     int gs;
+    int gw;
+    int ko;
+    int in;
+    int zt;
+    int au;
+    int pa;
 
-    @Transient
-    int stBonus;
-    @Transient
-    int koBonus;
-    @Transient
-    int gwBonus;
-    @Transient
-    int gsBonus;
+    @Transient int stBonus;
+    @Transient int gsBonus;
+    @Transient int gwBonus;
+    @Transient int koBonus;
+    @Transient int inBonus;
+    @Transient int ztBonus;
+    @Transient int auBonus;
+    @Transient int paBonus;
+
+    int lp;
+    int apWurf;
+    @Transient int apBonus;
+    @Transient int ap;
 
     List<Skill> skills = new ArrayList<>();
 }

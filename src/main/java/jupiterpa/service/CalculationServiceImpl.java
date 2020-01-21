@@ -27,21 +27,34 @@ public class CalculationServiceImpl implements CalculationService {
         }
         // check range
         checkAttribute( character.getSt() );
-        checkAttribute( character.getKo() );
-        checkAttribute( character.getGw() );
         checkAttribute( character.getGs() );
+        checkAttribute( character.getGw() );
+        checkAttribute( character.getKo() );
+        checkAttribute( character.getIn() );
+        checkAttribute( character.getZt() );
+        checkAttribute( character.getAu() );
+        checkAttribute( character.getPa() );
 
         // Base Fields
-        if (character.getLevel() == 0)
+        if (character.getLevel() == 0) {
             character.setLevel(1);
+        }
 
         // Attributes
 
         // Attribute Bonus
         character.setStBonus(getBonus(character.getSt()));
-        character.setKoBonus(getBonus(character.getKo()));
-        character.setGwBonus(getBonus(character.getGw()));
         character.setGsBonus(getBonus(character.getGs()));
+        character.setGwBonus(getBonus(character.getGw()));
+        character.setKoBonus(getBonus(character.getKo()));
+        character.setInBonus(getBonus(character.getIn()));
+        character.setZtBonus(getBonus(character.getZt()));
+        character.setAuBonus(getBonus(character.getAu()));
+        character.setPaBonus(getBonus(character.getPa()));
+
+        // LP & AP
+        character.setApBonus( getApBonus(character) );
+        character.setAp( character.getApWurf() + character.getApBonus());
 
         //// Skills
         List<Skill> enrichedSkills = new ArrayList<>();
@@ -94,27 +107,58 @@ public class CalculationServiceImpl implements CalculationService {
         if (name.equals("St")) {
             return getBonus(c.getSt());
         }
-        if (name.equals("Ko")) {
-            return getBonus(c.getKo());
+        if (name.equals("Gs")) {
+            return getBonus(c.getGs());
         }
         if (name.equals("Gw")) {
             return getBonus(c.getGw());
         }
-        if (name.equals("Gs")) {
-            return getBonus(c.getGs());
+        if (name.equals("Ko")) {
+            return getBonus(c.getKo());
+        }
+        if (name.equals("In")) {
+            return getBonus(c.getIn());
+        }
+        if (name.equals("Zt")) {
+            return getBonus(c.getZt());
+        }
+        if (name.equals("Au")) {
+            return getBonus(c.getAu());
+        }
+        if (name.equals("Pa")) {
+            return getBonus(c.getPa());
         }
         throw new Exception("Unknown Attribute");
     }
     private int getBonus(int v) {
         if (v <= 5) return -2;
-        if (v <= 10) return -1;
-        if (v >= 95) return 2;
-        if (v >= 90) return 1;
+        if (v <= 20) return -1;
+        if (v >= 96) return 2;
+        if (v >= 81) return 1;
         return 0;
     }
     private String getBaseAttribute(Skill skill) throws Exception {
         Skill s = utility.findSkill(settings.getDefaultSkills(),skill.getName());
             return s.getBaseAttribute();
+    }
+    private int getApBonus(PlayerCharacter c) {
+        int bonus = (int) Math.round( c.getKo() / 10.0 + c.getSt() / 20.0 );
+        switch (c.getClassName()) {
+            case "Krieger":
+            case "Waldläufer":
+            case "Barbar":
+                bonus += 3 * c.getLevel();
+                break;
+            case "Söldner":
+            case "Spitzbube":
+            case "Schamane":
+                bonus += 2 * c.getLevel();
+                break;
+            default:
+                bonus += c.getLevel();
+
+        }
+        return bonus;
     }
 
     public Cost calculate(PlayerCharacter c, Skill s) {
