@@ -1,3 +1,9 @@
+##TODO
+- User friendly error handling
+- Complete settings 
+- Level up
+
+##Done
 ### Patches 
 - [x] Remove ID from Skill --> only needed for Header
 - [x] Enforce uniqueness of ID of Header
@@ -6,10 +12,7 @@
 - [x] Security API
 - [x] AOP (Security and Logging)
 - [x] Security on user level
-- [x] Swagger-Support
+- [x] Swagger-Support (ignored)
 - [x] Complete attributes
 - [x] AP
-- User friendly error handling
-- Complete settings 
-- Level up
 
