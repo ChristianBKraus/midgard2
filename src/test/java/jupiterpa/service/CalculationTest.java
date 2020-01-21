@@ -20,7 +20,7 @@ public class CalculationTest {
     UtilityService utility;
 
     @Before
-    public void injet() throws IOException, URISyntaxException {
+    public void injet() throws UserException {
         SettingsService settings = new SettingsServiceImpl();
         utility = new UtilityServiceImpl();
         service = new CalculationServiceImpl(settings,utility);
@@ -28,7 +28,7 @@ public class CalculationTest {
 
 
     @Test
-    public void test() throws Exception {
+    public void test() {
         // Test Input
         PlayerCharacter entity = TestCreation.create();
 

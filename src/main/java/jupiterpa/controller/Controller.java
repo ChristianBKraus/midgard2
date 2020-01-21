@@ -6,8 +6,13 @@ import jupiterpa.repository.CharacterRepository;
 import jupiterpa.security.SecurityService;
 import jupiterpa.service.CalculationServiceImpl;
 import jupiterpa.service.LearningServiceImpl;
+import jupiterpa.service.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +49,7 @@ public class Controller {
     }
 
     @GetMapping("/character/{name}")
-    public PlayerCharacter getCharacters(@PathVariable String name) throws Exception {
+    public PlayerCharacter getCharacters(@PathVariable String name) throws UserException {
         Optional<PlayerCharacter> entity = characterRepo.findByName(name);
         if (entity.isPresent()) {
             PlayerCharacter c = calculationService.enrich(entity.get());
@@ -57,7 +62,7 @@ public class Controller {
     }
 
     @PostMapping("/character")
-    public PlayerCharacter create(@RequestBody PlayerCharacter playerCharacter) throws Exception {
+    public PlayerCharacter create(@RequestBody PlayerCharacter playerCharacter) throws UserException {
         playerCharacter.setUser( security.getUser() ); // Set User
         playerCharacter = calculationService.enrich(playerCharacter); // for checks
         playerCharacter.getSkills().removeIf( s -> !s.isLearned());
@@ -71,11 +76,11 @@ public class Controller {
                 @PathVariable String name,
                 @PathVariable String skill,
                 @PathVariable int gold
-                ) throws Exception {
+                ) throws UserException {
 
         // Read corresponding character
         Optional<PlayerCharacter> co = characterRepo.findByName(name);
-        if (! co.isPresent()) throw new Exception("Character does not exist");
+        if (! co.isPresent()) throw new UserException("Charakter " + name + " existiert nicht");
         PlayerCharacter character = co.get();
 
         security.check(character.getUser());
@@ -90,6 +95,18 @@ public class Controller {
         characterRepo.save(character);
 
         return cost;
+    }
+
+    @ExceptionHandler(UserException.class)
+    public ModelAndView handleException(HttpServletRequest req, UserException exp) throws HTTPUserException {
+        throw new HTTPUserException(exp.getMessage());
+    }
+
+    @ResponseStatus(value= HttpStatus.BAD_REQUEST)
+    public static class HTTPUserException extends RuntimeException {
+        public HTTPUserException(String text) {
+            super(text);
+        }
     }
 
 }

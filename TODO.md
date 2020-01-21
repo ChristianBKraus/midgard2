@@ -1,5 +1,4 @@
 ##TODO
-- User friendly error handling
 - Complete settings 
 - Level up
 
@@ -15,4 +14,5 @@
 - [x] Swagger-Support (ignored)
 - [x] Complete attributes
 - [x] AP
+- [x] User friendly error handling
 

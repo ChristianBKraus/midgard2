@@ -22,7 +22,7 @@ public class LearningServiceImpl implements LearningService {
         this.calculation = calculation;
     }
 
-    public Cost learn(PlayerCharacter c, String skillName, int gold) throws Exception {
+    public Cost learn(PlayerCharacter c, String skillName, int gold) throws UserException {
 
         // Find corresponding Skill
         Skill s = utility.findSkill(c.getSkills(),skillName);
@@ -32,7 +32,7 @@ public class LearningServiceImpl implements LearningService {
 
         //// consider used gold and reduce amount of EP
         // check for minimum gold
-        if (cost.getGold() > gold) throw new Exception("Not enough Gold");
+        if (cost.getGold() > gold) throw new UserException("Nicht genug Gold (" + cost.getGold() + " benötigt)");
         // reduce spent EP by gold
         int reducedByGold = cost.getEp() - ( gold - cost.getGold() ) / 10;
         // maximal halve EP can be converted to gold
@@ -43,7 +43,7 @@ public class LearningServiceImpl implements LearningService {
 
         // update current not spent EP of character
         int notSpentEp = c.getNotSpentEp() - reducedByGold;
-        if (notSpentEp < 0) throw new Exception("Not enough EP left");
+        if (notSpentEp < 0) throw new UserException("Nicht genug EP (" + reducedByGold + " benötigt)");
         c.setNotSpentEp(notSpentEp);
         // update gold
         c.setGold( c.getGold() - spentGold - cost.getGold());

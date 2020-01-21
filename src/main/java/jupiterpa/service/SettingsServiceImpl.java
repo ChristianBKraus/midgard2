@@ -35,54 +35,63 @@ public class SettingsServiceImpl implements SettingsService {
     @Autowired
     Health health;
 
-    public Map<String,CostsMain> getMainCosts() {
+    public Map<String, CostsMain> getMainCosts() {
         return mainCosts;
     }
-    public Map<String,CostsSkill> getSkillCosts() {
+
+    public Map<String, CostsSkill> getSkillCosts() {
         return skillCosts;
     }
-    public Map<String,CostsClass> getClassCosts() {
+
+    public Map<String, CostsClass> getClassCosts() {
         return classCosts;
     }
+
     public List<String> getClasses() {
         return classes;
     }
-    public List<Skill> getDefaultSkills() throws IOException, URISyntaxException {
+
+    public List<Skill> getDefaultSkills() throws UserException {
         defaultSkills = new ArrayList<>();
-        loadFile("defaultSkills.csv",defaultSkillConsumer);
+        loadFile("defaultSkills.csv", defaultSkillConsumer);
         return defaultSkills;
     }
 
-    public SettingsServiceImpl() throws URISyntaxException, IOException {
-        loadFile("mainCosts.csv",mainConsumer);
-        loadFile("classCosts.csv",classConsumer);
-        loadFile("skillCosts.csv",skillConsumer);
+    public SettingsServiceImpl() throws UserException {
+        loadFile("mainCosts.csv", mainConsumer);
+        loadFile("classCosts.csv", classConsumer);
+        loadFile("skillCosts.csv", skillConsumer);
         if (health != null)
-          health.setHealth(new HealthInfo("Status",false,"Initialized"));
+            health.setHealth(new HealthInfo("Status", false, "Initialized"));
     }
 
     final Consumer<String[]> mainConsumer = line -> {
-        CostsMain c = new CostsMain( line );
-        mainCosts.put(c.getCostRow() + "/" + c.getBonus(),c);
+        CostsMain c = new CostsMain(line);
+        mainCosts.put(c.getCostRow() + "/" + c.getBonus(), c);
     };
     final Consumer<String[]> classConsumer = line -> {
-        CostsClass c = new CostsClass( line );
-        classCosts.put(c.getClassName() + "/" + c.getGroup(),c);
+        CostsClass c = new CostsClass(line);
+        classCosts.put(c.getClassName() + "/" + c.getGroup(), c);
         classes.add(c.getClassName());
     };
     final Consumer<String[]> skillConsumer = line -> {
-        CostsSkill c = new CostsSkill( line );
-        skillCosts.put(c.getName(),c);
+        CostsSkill c = new CostsSkill(line);
+        skillCosts.put(c.getName(), c);
     };
     final Consumer<String[]> defaultSkillConsumer = line -> {
-        Skill c = new Skill( line );
+        Skill c = new Skill(line);
         defaultSkills.add(c);
     };
 
-    void loadFile(String file,Consumer<String[]> consumer) throws URISyntaxException, IOException {
-        CSVParser parser = new CSVParserBuilder().withSeparator(';').withIgnoreQuotations(true).build();
-        Reader reader = Files.newBufferedReader(Paths.get(ClassLoader.getSystemResource(file).toURI()));
-        CSVReader mainReader = new CSVReaderBuilder(reader).withSkipLines(1).withCSVParser(parser).build();
-        mainReader.forEach(consumer);
+    void loadFile(String file, Consumer<String[]> consumer) throws UserException {
+        try {
+            CSVParser parser = new CSVParserBuilder().withSeparator(';').withIgnoreQuotations(true).build();
+            Reader reader = Files.newBufferedReader(Paths.get(ClassLoader.getSystemResource(file).toURI()));
+            CSVReader mainReader = new CSVReaderBuilder(reader).withSkipLines(1).withCSVParser(parser).build();
+            mainReader.forEach(consumer);
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
+            throw new UserException("Interner Fehler beim Laden");
+        }
     }
 }

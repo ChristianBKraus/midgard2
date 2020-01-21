@@ -20,20 +20,20 @@ public class CalculationServiceImpl implements CalculationService {
         this.utility = utility;
     }
 
-    public PlayerCharacter enrich(PlayerCharacter character) throws Exception {
+    public PlayerCharacter enrich(PlayerCharacter character) throws UserException {
         // Checks
         if (! settings.getClasses().contains(character.getClassName()) ) {
-            throw new Exception("Class " + character.getClassName() + " not found");
+            throw new UserException("Klasse " + character.getClassName() + " existiert nicht");
         }
         // check range
-        checkAttribute( character.getSt() );
-        checkAttribute( character.getGs() );
-        checkAttribute( character.getGw() );
-        checkAttribute( character.getKo() );
-        checkAttribute( character.getIn() );
-        checkAttribute( character.getZt() );
-        checkAttribute( character.getAu() );
-        checkAttribute( character.getPa() );
+        checkAttribute("St", character.getSt() );
+        checkAttribute("Gs", character.getGs() );
+        checkAttribute("Gw", character.getGw() );
+        checkAttribute("Ko", character.getKo() );
+        checkAttribute("In", character.getIn() );
+        checkAttribute("Zt", character.getZt() );
+        checkAttribute("Au", character.getAu() );
+        checkAttribute("pA", character.getPa() );
 
         // Base Fields
         if (character.getLevel() == 0) {
@@ -83,11 +83,11 @@ public class CalculationServiceImpl implements CalculationService {
         return character;
     }
 
-    private void checkAttribute(int attr) throws Exception {
-        if (attr < 1 || attr > 100) throw new Exception("Attribute out of Range");
+    private void checkAttribute(String name, int attr) throws UserException {
+        if (attr < 1 || attr > 100) throw new UserException(name + " muss zwischen 1 und 100 liegen (" + attr + ")");
     }
 
-    private void enrichSkill(Skill s, PlayerCharacter c) throws Exception {
+    private void enrichSkill(Skill s, PlayerCharacter c) throws UserException {
         // name
         // level
 
@@ -103,7 +103,7 @@ public class CalculationServiceImpl implements CalculationService {
         // learned
 
     }
-    private int getAttributeBonus(PlayerCharacter c, String name) throws Exception {
+    private int getAttributeBonus(PlayerCharacter c, String name) throws UserException {
         if (name.equals("St")) {
             return getBonus(c.getSt());
         }
@@ -128,7 +128,7 @@ public class CalculationServiceImpl implements CalculationService {
         if (name.equals("Pa")) {
             return getBonus(c.getPa());
         }
-        throw new Exception("Unknown Attribute");
+        throw new UserException("Attribute " + name + " ist nicht bekannt");
     }
     private int getBonus(int v) {
         if (v <= 5) return -2;
@@ -137,9 +137,9 @@ public class CalculationServiceImpl implements CalculationService {
         if (v >= 81) return 1;
         return 0;
     }
-    private String getBaseAttribute(Skill skill) throws Exception {
+    private String getBaseAttribute(Skill skill) throws UserException {
         Skill s = utility.findSkill(settings.getDefaultSkills(),skill.getName());
-            return s.getBaseAttribute();
+        return s.getBaseAttribute();
     }
     private int getApBonus(PlayerCharacter c) {
         int bonus = (int) Math.round( c.getKo() / 10.0 + c.getSt() / 20.0 );

@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.*;
 
 public class LoadTest {
     @Test
-    public void test() throws IOException, URISyntaxException {
+    public void test() throws UserException {
         SettingsServiceImpl settings = new SettingsServiceImpl();
 
         assertThat( settings.mainCosts.size(), greaterThanOrEqualTo(1) );
