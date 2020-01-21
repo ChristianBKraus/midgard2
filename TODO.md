@@ -1,6 +1,7 @@
 ##TODO
 - Complete settings 
 - Level up
+- remove unlearned
 
 ##Done
 ### Patches 
@@ -11,8 +12,8 @@
 - [x] Security API
 - [x] AOP (Security and Logging)
 - [x] Security on user level
-- [x] Swagger-Support (ignored)
+- [x] Swagger-Support
+- [x] User friendly error handling
 - [x] Complete attributes
 - [x] AP
-- [x] User friendly error handling
 
