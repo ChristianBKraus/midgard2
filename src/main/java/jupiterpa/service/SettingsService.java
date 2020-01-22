@@ -1,9 +1,6 @@
 package jupiterpa.service;
 
-import jupiterpa.model.CostsClass;
-import jupiterpa.model.CostsMain;
-import jupiterpa.model.CostsSkill;
-import jupiterpa.model.Skill;
+import jupiterpa.model.*;
 
 import java.util.List;
 import java.util.Map;
@@ -14,4 +11,5 @@ public interface SettingsService {
     Map<String, CostsSkill> getSkillCosts();
     List<String> getClasses();
     List<Skill>  getDefaultSkills() throws UserException;
+    Map<String, CostsLevel> getLevelCosts();
 }

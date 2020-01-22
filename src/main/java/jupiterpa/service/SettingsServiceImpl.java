@@ -6,10 +6,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import jupiterpa.actuator.Health;
 import jupiterpa.actuator.HealthInfo;
-import jupiterpa.model.CostsClass;
-import jupiterpa.model.CostsMain;
-import jupiterpa.model.CostsSkill;
-import jupiterpa.model.Skill;
+import jupiterpa.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +28,7 @@ public class SettingsServiceImpl implements SettingsService {
     final Map<String, CostsSkill> skillCosts = new HashMap<>(); //Name
     final List<String> classes = new ArrayList<>(); // by CostsClass
     List<Skill> defaultSkills;                // on Request
+    final Map<String, CostsLevel> levelCosts = new HashMap<>(); // Level
 
     @Autowired
     Health health;
@@ -57,10 +55,13 @@ public class SettingsServiceImpl implements SettingsService {
         return defaultSkills;
     }
 
+    public Map<String, CostsLevel> getLevelCosts() { return levelCosts; }
+
     public SettingsServiceImpl() throws UserException {
         loadFile("mainCosts.csv", mainConsumer);
         loadFile("classCosts.csv", classConsumer);
         loadFile("skillCosts.csv", skillConsumer);
+        loadFile("levelCosts.csv", levelConsumer );
         if (health != null)
             health.setHealth(new HealthInfo("Status", false, "Initialized"));
     }
@@ -81,6 +82,10 @@ public class SettingsServiceImpl implements SettingsService {
     final Consumer<String[]> defaultSkillConsumer = line -> {
         Skill c = new Skill(line);
         defaultSkills.add(c);
+    };
+    final Consumer<String[]> levelConsumer = line -> {
+        CostsLevel c = new CostsLevel(line);
+        levelCosts.put(String.valueOf(c.getLevel()),c);
     };
 
     void loadFile(String file, Consumer<String[]> consumer) throws UserException {

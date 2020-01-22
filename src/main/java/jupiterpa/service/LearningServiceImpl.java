@@ -1,8 +1,6 @@
 package jupiterpa.service;
 
-import jupiterpa.model.Cost;
-import jupiterpa.model.PlayerCharacter;
-import jupiterpa.model.Skill;
+import jupiterpa.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +69,51 @@ public class LearningServiceImpl implements LearningService {
                         cost.getPractice(),
                         cost.getTe(),
                         cost.getLe());
+    }
+
+    public PlayerCharacter improve(PlayerCharacter c, Improve input) throws UserException {
+        c.setNotSpentEp( c.getNotSpentEp() + input.getEp() );
+        c.setTotalEp( c.getTotalEp() + input.getEp() );
+        c.setGold( c.getGold() + input.getGold() );
+
+        boolean levelUp;
+        do {
+            levelUp = false;
+            CostsLevel cost = settings.getLevelCosts().get(String.valueOf(c.getLevel() + 1));
+            if (cost.getCost() < c.getTotalEp()) {
+                c.setLevel(c.getLevel() + 1);
+                levelUp = true;
+            }
+        } while (levelUp);
+
+        return c;
+    }
+
+    public PlayerCharacter levelUp(PlayerCharacter c, LevelUp input) throws UserException {
+        if (c.getLevel() <= c.getSpentLevel())
+            throw new UserException("Alle Stufen sind bereits gesteigert");
+        if (input.getInc() <= 0)
+            throw new UserException("Inkrement is nicht positiv");
+        c.setSpentLevel( c.getSpentLevel() + 1 );
+
+        if (c.getApWurf() < input.getApWurf()) c.setApWurf(input.getApWurf());
+
+        if (input.getAttribute() != null) {
+            if (!input.getAttribute().equals("")) {
+                switch (input.getAttribute()) {
+                    case "St": c.setSt( c.getSt() + input.getInc() ); break;
+                    case "Gs": c.setGs( c.getGs() + input.getInc() ); break;
+                    case "Gw": c.setGw( c.getGw() + input.getInc() ); break;
+                    case "Ko": c.setKo( c.getKo() + input.getInc() ); break;
+                    case "In": c.setIn( c.getIn() + input.getInc() ); break;
+                    case "Zt": c.setZt( c.getZt() + input.getInc() ); break;
+                    case "Au": c.setAu( c.getAu() + input.getInc() ); break;
+                    case "pA": c.setPa( c.getPa() + input.getInc() ); break;
+                    default: throw new UserException("Unbekanntes Attribut " + input.getAttribute()) ;
+                }
+            }
+        }
+        return c;
     }
 
 }

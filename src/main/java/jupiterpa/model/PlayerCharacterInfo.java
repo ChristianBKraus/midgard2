@@ -1,4 +1,4 @@
-package jupiterpa.controller;
+package jupiterpa.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
