@@ -1,9 +1,9 @@
-##TODO
+## TODO
 - Complete settings 
 - Level up
 - remove unlearned
 
-##Done
+## Done
 ### Patches 
 - [x] Remove ID from Skill --> only needed for Header
 - [x] Enforce uniqueness of ID of Header
