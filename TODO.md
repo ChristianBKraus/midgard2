@@ -1,7 +1,8 @@
 ## TODO
 - Complete settings 
 - Level up
-- remove unlearned
+- Zauberer und Zauber
+- Elfen
 
 ## Done
 ### Patches 
