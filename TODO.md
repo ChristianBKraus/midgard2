@@ -2,7 +2,7 @@
 - Complete settings 
 - Level up
 - Zauberer und Zauber
-- Elfen
+- Elfen und Zwerge
 
 ## Done
 ### Patches 
