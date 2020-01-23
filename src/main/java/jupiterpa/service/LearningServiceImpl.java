@@ -59,12 +59,12 @@ public class LearningServiceImpl implements LearningService {
         s.setBonus(s.getLevel() + s.getAttributeBonus());
 
         // Recalculate new cost and store on skill
-        cost = calculation.calculate(c,s);
-        s.setCostEP(cost.getEp());
-        s.setCostGold(cost.getGold());
+        Cost newCost = calculation.calculate(c,s);
+        s.setCostEP(newCost.getEp());
+        s.setCostGold(newCost.getGold());
 
         // return cost spend for this learning
-        return new Cost(spentGold,
+        return new Cost(spentGold + cost.getGold(),
                         reducedByGold,
                         cost.getPractice(),
                         cost.getTe(),

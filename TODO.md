@@ -1,6 +1,5 @@
 ## TODO
 - Complete settings 
-- Level up
 - Zauberer und Zauber
 - Elfen und Zwerge
 
@@ -17,4 +16,5 @@
 - [x] User friendly error handling
 - [x] Complete attributes
 - [x] AP
+- [x] Level up
 

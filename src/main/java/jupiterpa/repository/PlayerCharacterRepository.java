@@ -7,6 +7,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.Optional;
 
 @Document
-public interface CharacterRepository extends MongoRepository<PlayerCharacter,String> {
+public interface PlayerCharacterRepository extends MongoRepository<PlayerCharacter,String> {
     Optional<PlayerCharacter> findByName(String name);
 }

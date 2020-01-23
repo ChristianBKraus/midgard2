@@ -1,7 +1,7 @@
 package jupiterpa.service;
 
 import jupiterpa.model.*;
-import jupiterpa.repository.CharacterRepository;
+import jupiterpa.repository.PlayerCharacterRepository;
 import jupiterpa.security.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 public class MainServiceImpl implements MainService {
     @Autowired
-    CharacterRepository repo;
+    PlayerCharacterRepository repo;
     @Autowired
     LearningService learning;
     @Autowired
@@ -22,7 +22,7 @@ public class MainServiceImpl implements MainService {
     SecurityService security;
 
     public MainServiceImpl(
-            CharacterRepository repo,
+            PlayerCharacterRepository repo,
             LearningService learning,
             CalculationService calculation,
             SecurityService security) {

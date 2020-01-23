@@ -2,6 +2,7 @@ package jupiterpa.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Data @NoArgsConstructor
 public class PlayerCharacter {
+    @Id
     String name;
     String user;
 

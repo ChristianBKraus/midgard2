@@ -2,7 +2,7 @@ package jupiterpa;
 
 import jupiterpa.actuator.HealthInfo;
 import jupiterpa.actuator.Health;
-import jupiterpa.repository.CharacterRepository;
+import jupiterpa.repository.PlayerCharacterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -25,7 +25,7 @@ public class Application implements CommandLineRunner {
     Health health;
 
     @Autowired
-    CharacterRepository repo;
+    PlayerCharacterRepository repo;
 
     @Override
     public void run(String... arg0) {
