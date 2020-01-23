@@ -1,5 +1,7 @@
 package jupiterpa.service;
 
+import jupiterpa.model.Improve;
+import jupiterpa.model.LevelUp;
 import jupiterpa.model.PlayerCharacter;
 import jupiterpa.model.Skill;
 import jupiterpa.util.TestCreation;
@@ -15,7 +17,7 @@ public class LearningTest {
     CalculationService calculation;
     LearningService learning;
 
-    PlayerCharacter setup() throws Exception {
+    PlayerCharacter setup() throws UserException {
         settings = new SettingsServiceImpl();
         utility = new UtilityServiceImpl();
         calculation = new CalculationServiceImpl(settings,utility);
@@ -26,7 +28,7 @@ public class LearningTest {
     }
 
     @Test
-    public void increase() throws Exception {
+    public void learn() throws UserException {
 
         // Prepare
         PlayerCharacter ch = setup();
@@ -51,7 +53,7 @@ public class LearningTest {
     }
 
     @Test
-    public void increase_with_practice_and_gold() throws Exception {
+    public void learn_with_practice_and_gold() throws UserException {
         // Prepare
         PlayerCharacter ch = setup();
         ch.setTotalEp(200);
@@ -75,7 +77,7 @@ public class LearningTest {
     }
 
     @Test
-    public void learn() throws Exception {
+    public void train() throws UserException {
         // Prepare
         PlayerCharacter ch = setup();
         ch.setTotalEp(60);
@@ -99,7 +101,7 @@ public class LearningTest {
     }
 
     @Test
-    public void learn_with_gold() throws Exception {
+    public void train_with_gold() throws UserException {
         // Prepare
         PlayerCharacter ch = setup();
         ch.setTotalEp(260);
@@ -121,5 +123,63 @@ public class LearningTest {
         assertThat( ch.getTotalEp(), is(260));
         assertThat( ch.getGold(), is(1900));
     }
+
+    @Test
+    public void improve() throws UserException {
+        // Prepare
+        PlayerCharacter ch = setup();
+        ch.setTotalEp(10);
+        ch.setNotSpentEp(5);
+        ch.setGold(100);
+
+        // Process (no Level Up)
+        learning.improve(ch,new Improve(ch.getName(),11,111));
+
+        assertThat( ch.getNotSpentEp(), is(16) );
+        assertThat( ch.getTotalEp(), is(21) );
+        assertThat( ch.getGold(), is(211) );
+        assertThat( ch.getLevel(), is(1) );
+        assertThat( ch.getSpentLevel(), is(1) );
+
+        // Process (incl. Level Up)
+        learning.improve(ch,new Improve(ch.getName(),100,0));
+
+        assertThat( ch.getNotSpentEp(), is(116) );
+        assertThat( ch.getTotalEp(), is(121) );
+        assertThat( ch.getGold(), is(211) );
+        assertThat( ch.getLevel(), is(2) );
+        assertThat( ch.getSpentLevel(), is(1) );
+    }
+
+    @Test
+    public void levelUp() throws UserException {
+        // Prepare
+        PlayerCharacter ch = setup();
+        ch.setTotalEp(0);
+        ch.setNotSpentEp(0);
+        ch.setGold(100);
+
+        // Process (incl. Level Up)
+        learning.improve(ch,new Improve(ch.getName(),120,0));
+
+        assertThat( ch.getNotSpentEp(), is(120) );
+        assertThat( ch.getTotalEp(), is(120) );
+        assertThat( ch.getGold(), is(100) );
+        assertThat( ch.getLevel(), is(2) );
+        assertThat( ch.getSpentLevel(), is(1) );
+        assertThat( ch.getApWurf(), is(2) );
+
+        // LevelUp (without Attribute Increase)
+        learning.levelUp(ch, new LevelUp(ch.getName(),2,"",0));
+
+        assertThat( ch.getNotSpentEp(), is(120) );
+        assertThat( ch.getTotalEp(), is(120) );
+        assertThat( ch.getGold(), is(100) );
+        assertThat( ch.getLevel(), is(2) );
+        assertThat( ch.getSpentLevel(), is(2) );
+        assertThat( ch.getApWurf(), is(4) );
+
+    }
+
 }
 

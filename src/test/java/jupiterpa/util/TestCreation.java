@@ -20,6 +20,7 @@ public class TestCreation {
         c.setZt(50);
         c.setAu(50);
         c.setPa(50);
+        c.setApWurf(2);
         List<Skill> skills = new ArrayList<>();
 
 
@@ -39,6 +40,7 @@ public class TestCreation {
         exp.setName( "Name" );
         exp.setClassName( "Krieger" );
         exp.setLevel(1);
+        exp.setSpentLevel(1);
         exp.setNotSpentEp(0);
         exp.setTotalEp(0);
         exp.setSt( 2 );
@@ -59,8 +61,9 @@ public class TestCreation {
         exp.setAuBonus(0);
         exp.setPaBonus(0);
 
+        exp.setApWurf(2);
         exp.setApBonus(4);
-        exp.setAp(4);
+        exp.setAp(6);
 
         return exp;
     }

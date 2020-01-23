@@ -92,14 +92,14 @@ public class LearningServiceImpl implements LearningService {
     public PlayerCharacter levelUp(PlayerCharacter c, LevelUp input) throws UserException {
         if (c.getLevel() <= c.getSpentLevel())
             throw new UserException("Alle Stufen sind bereits gesteigert");
-        if (input.getInc() <= 0)
-            throw new UserException("Inkrement is nicht positiv");
         c.setSpentLevel( c.getSpentLevel() + 1 );
 
-        if (c.getApWurf() < input.getApWurf()) c.setApWurf(input.getApWurf());
+        c.setApWurf(c.getApWurf() + input.getApWurf());
 
         if (input.getAttribute() != null) {
             if (!input.getAttribute().equals("")) {
+                if (input.getInc() <= 0)
+                    throw new UserException("Inkrement is nicht positiv");
                 switch (input.getAttribute()) {
                     case "St": c.setSt( c.getSt() + input.getInc() ); break;
                     case "Gs": c.setGs( c.getGs() + input.getInc() ); break;
@@ -113,6 +113,7 @@ public class LearningServiceImpl implements LearningService {
                 }
             }
         }
+
         return c;
     }
 

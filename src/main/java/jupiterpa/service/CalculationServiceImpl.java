@@ -38,6 +38,7 @@ public class CalculationServiceImpl implements CalculationService {
         // Base Fields
         if (character.getLevel() == 0) {
             character.setLevel(1);
+            character.setSpentLevel(1);
         }
 
         // Attributes
