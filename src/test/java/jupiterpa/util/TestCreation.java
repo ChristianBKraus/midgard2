@@ -39,6 +39,7 @@ public class TestCreation {
         PlayerCharacter exp = new PlayerCharacter();
         exp.setName( "Name" );
         exp.setClassName( "Krieger" );
+        exp.setRace("Mensch");
         exp.setLevel(1);
         exp.setSpentLevel(1);
         exp.setNotSpentEp(0);
