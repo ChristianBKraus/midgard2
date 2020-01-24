@@ -1,7 +1,7 @@
 ## TODO
 - Complete settings 
 - Zauberer und Zauber
-- Elfen und Zwerge
+
 
 ## Done
 ### Patches 
@@ -17,4 +17,4 @@
 - [x] Complete attributes
 - [x] AP
 - [x] Level up
-
+- [x] Elfen und Zwerge

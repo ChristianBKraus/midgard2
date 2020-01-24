@@ -81,8 +81,15 @@ public class LearningServiceImpl implements LearningService {
             levelUp = false;
             CostsLevel cost = settings.getLevelCosts().get(String.valueOf(c.getLevel() + 1));
             if (cost.getCost() < c.getTotalEp()) {
-                c.setLevel(c.getLevel() + 1);
-                levelUp = true;
+                if (c.getRace().equals("Zwerg")) {
+                    if (c.getGold() > cost.getCost() / 2) {
+                        c.setLevel(c.getLevel() + 1);
+                        levelUp = true;
+                    }
+                } else {
+                    c.setLevel(c.getLevel() + 1);
+                    levelUp = true;
+                }
             }
         } while (levelUp);
 

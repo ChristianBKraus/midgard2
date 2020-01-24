@@ -40,6 +40,9 @@ public class CalculationServiceImpl implements CalculationService {
             character.setLevel(1);
             character.setSpentLevel(1);
         }
+        if (character.getRace() == null) {
+            character.setRace("Mensch");
+        }
 
         // Attributes
 
@@ -188,6 +191,9 @@ public class CalculationServiceImpl implements CalculationService {
         } else {
             practice = 0;
             ep = le * 3 * teCost;
+            if (c.getRace().equals("Elf")) {
+                ep += 6;
+            }
             gold = 200;
         }
 

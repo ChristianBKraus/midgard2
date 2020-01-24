@@ -51,17 +51,17 @@ public class SettingsServiceImpl implements SettingsService {
 
     public List<Skill> getDefaultSkills() throws UserException {
         defaultSkills = new ArrayList<>();
-        loadFile("defaultSkills.csv", defaultSkillConsumer);
+        loadFile("settings/defaultSkills.csv", defaultSkillConsumer);
         return defaultSkills;
     }
 
     public Map<String, CostsLevel> getLevelCosts() { return levelCosts; }
 
     public SettingsServiceImpl() throws UserException {
-        loadFile("mainCosts.csv", mainConsumer);
-        loadFile("classCosts.csv", classConsumer);
-        loadFile("skillCosts.csv", skillConsumer);
-        loadFile("levelCosts.csv", levelConsumer );
+        loadFile("settings/mainCosts.csv", mainConsumer);
+        loadFile("settings/classCosts.csv", classConsumer);
+        loadFile("settings/skillCosts.csv", skillConsumer);
+        loadFile("settings/levelCosts.csv", levelConsumer );
         if (health != null)
             health.setHealth(new HealthInfo("Status", false, "Initialized"));
     }

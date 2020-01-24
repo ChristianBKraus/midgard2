@@ -51,4 +51,19 @@ public class CalculationTest {
         assertThat( reiten, is( TestCreation.getExpectedSkill("Reiten")));
     }
 
+    @Test
+    public void test_elf() {
+        // Test Input
+        PlayerCharacter entity = TestCreation.create();
+        entity.setRace("Elf");
+
+        // Process
+        PlayerCharacter act = service.enrich(entity);
+
+        Skill klettern = utility.findSkill(act.getSkills(),"Klettern");
+        assertThat( klettern.getCostEP(), is(TestCreation.getExpectedSkill("Klettern").getCostEP()));
+
+        Skill reiten = utility.findSkill(act.getSkills(),"Reiten");
+        assertThat( reiten.getCostEP(), is( TestCreation.getExpectedSkill("Reiten").getCostEP() + 6));
+    }
 }

@@ -40,6 +40,7 @@ public class MainServiceImpl implements MainService {
             c.setName(entity.getName());
             c.setClassName(entity.getClassName());
             c.setLevel(entity.getLevel());
+            c.setRace(entity.getRace());
             if (security.allowed(entity.getUser()))
                 characters.add(c);
         }

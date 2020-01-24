@@ -9,4 +9,5 @@ public class PlayerCharacterInfo {
     String name;
     String className;
     int level;
+    String race;
 }

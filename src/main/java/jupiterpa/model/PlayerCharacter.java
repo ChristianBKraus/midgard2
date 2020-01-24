@@ -16,6 +16,7 @@ public class PlayerCharacter {
 
     String className;
     int level;
+    String race;
     int spentLevel;
     int notSpentEp;
     int totalEp;

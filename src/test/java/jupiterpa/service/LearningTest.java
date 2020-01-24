@@ -1,9 +1,6 @@
 package jupiterpa.service;
 
-import jupiterpa.model.Improve;
-import jupiterpa.model.LevelUp;
-import jupiterpa.model.PlayerCharacter;
-import jupiterpa.model.Skill;
+import jupiterpa.model.*;
 import jupiterpa.util.TestCreation;
 import org.junit.Test;
 
@@ -178,6 +175,31 @@ public class LearningTest {
         assertThat( ch.getLevel(), is(2) );
         assertThat( ch.getSpentLevel(), is(2) );
         assertThat( ch.getApWurf(), is(4) );
+
+    }
+
+    @Test
+    public void improve_zwerg() throws UserException {
+        // Prepare
+        PlayerCharacter ch = setup();
+        ch.setRace("Zwerg");
+        ch.setTotalEp(0);
+        ch.setNotSpentEp(0);
+        ch.setGold(0);
+
+        // Process (no Level Up because of Gold)
+        learning.improve(ch,new Improve(ch.getName(),200,0));
+
+        assertThat( ch.getGold(), is(0) );
+        assertThat( ch.getLevel(), is(1) );
+        assertThat( ch.getSpentLevel(), is(1) );
+
+        // Process (incl. Level Up because of gold)
+        learning.improve(ch,new Improve(ch.getName(),0,1000));
+
+        assertThat( ch.getGold(), is(1000) );
+        assertThat( ch.getLevel(), is(2) );
+        assertThat( ch.getSpentLevel(), is(1) );
 
     }
 
