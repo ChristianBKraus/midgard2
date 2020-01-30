@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 @RestController
 @RequestMapping(path = "")
-public class Controller {
+public class SitesController {
     @Autowired
     Loader loader;
 
