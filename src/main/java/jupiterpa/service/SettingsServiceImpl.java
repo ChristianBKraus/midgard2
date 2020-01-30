@@ -71,7 +71,7 @@ public class SettingsServiceImpl implements SettingsService {
         classes.add(c.getClassName());
     };
     final Consumer<String[]> skillConsumer = line -> {
-        CostsSkill c = new CostsSkill( line );
+        CostsSkill c = new CostsSkill(line);
         skillCosts.put(c.getName(),c);
     };
     final Consumer<String[]> defaultSkillConsumer = line -> {

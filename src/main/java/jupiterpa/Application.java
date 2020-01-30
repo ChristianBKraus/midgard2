@@ -26,7 +26,7 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... arg0) {
         logger.info(TECHNICAL,"Application started");
-        health.setHealth(new HealthInfo("Status",false,"Running"));
+        health.setHealth(new HealthInfo("Status", false, "Running"));
     }
 
 }
