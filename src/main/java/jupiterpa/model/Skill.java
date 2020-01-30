@@ -2,25 +2,28 @@ package jupiterpa.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
+import org.springframework.data.annotation.Transient;
 
 @Data @NoArgsConstructor
 public class Skill {
-    long characterId;
     String name;
 
     int level;
     String baseAttribute;
 
+    @Transient
     int attributeBonus;
+    @Transient
     int bonus;
 
     int practice;
 
+    @Transient
     int costGold;
+    @Transient
     int costEP;
 
+    @Transient
     boolean learned;
 
     public Skill(String[] v) {

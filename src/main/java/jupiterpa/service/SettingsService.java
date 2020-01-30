@@ -1,12 +1,7 @@
 package jupiterpa.service;
 
-import jupiterpa.model.CostsClass;
-import jupiterpa.model.CostsMain;
-import jupiterpa.model.CostsSkill;
-import jupiterpa.model.Skill;
+import jupiterpa.model.*;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
@@ -15,5 +10,6 @@ public interface SettingsService {
     Map<String, CostsClass> getClassCosts();
     Map<String, CostsSkill> getSkillCosts();
     List<String> getClasses();
-    List<Skill>  getDefaultSkills() throws IOException, URISyntaxException;
+    List<Skill>  getDefaultSkills() throws UserException;
+    Map<String, CostsLevel> getLevelCosts();
 }

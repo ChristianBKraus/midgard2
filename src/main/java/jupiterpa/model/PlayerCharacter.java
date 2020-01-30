@@ -2,31 +2,48 @@ package jupiterpa.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Data @NoArgsConstructor
 public class PlayerCharacter {
-    long id;
+    @Id
     String name;
+    String user;
 
     String className;
     int level;
+    String race;
+    int spentLevel;
     int notSpentEp;
     int totalEp;
     int gold;
 
     int st;
-    int ko;
-    int gw;
     int gs;
+    int gw;
+    int ko;
+    int in;
+    int zt;
+    int au;
+    int pa;
 
-    int stBonus;
-    int koBonus;
-    int gwBonus;
-    int gsBonus;
+    @Transient int stBonus;
+    @Transient int gsBonus;
+    @Transient int gwBonus;
+    @Transient int koBonus;
+    @Transient int inBonus;
+    @Transient int ztBonus;
+    @Transient int auBonus;
+    @Transient int paBonus;
+
+    int lp;
+    int apWurf;
+    @Transient int apBonus;
+    @Transient int ap;
 
     List<Skill> skills = new ArrayList<>();
 }

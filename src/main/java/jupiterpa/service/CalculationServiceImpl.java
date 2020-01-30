@@ -15,78 +15,83 @@ public class CalculationServiceImpl implements CalculationService {
     @Autowired
     final UtilityService utility;
 
-    public static long next = 1L;
-
     public CalculationServiceImpl(SettingsService settings, UtilityService utility) {
         this.settings = settings;
         this.utility = utility;
     }
 
-    public PlayerCharacter enrich(PlayerCharacterEntity character) throws Exception {
+    public PlayerCharacter enrich(PlayerCharacter character) throws UserException {
         // Checks
         if (! settings.getClasses().contains(character.getClassName()) ) {
-            throw new Exception("Class not found");
+            throw new UserException("Klasse " + character.getClassName() + " existiert nicht");
         }
         // check range
-        checkAttribute( character.getSt() );
-        checkAttribute( character.getKo() );
-        checkAttribute( character.getGw() );
-        checkAttribute( character.getGs() );
+        checkAttribute("St", character.getSt() );
+        checkAttribute("Gs", character.getGs() );
+        checkAttribute("Gw", character.getGw() );
+        checkAttribute("Ko", character.getKo() );
+        checkAttribute("In", character.getIn() );
+        checkAttribute("Zt", character.getZt() );
+        checkAttribute("Au", character.getAu() );
+        checkAttribute("pA", character.getPa() );
 
         // Base Fields
-        PlayerCharacter c = new PlayerCharacter();
-        c.setId(next); next++;
-        c.setName( character.getName() );
-        c.setClassName( character.getClassName() );
-        if (character.getLevel() == 0)
-            c.setLevel(1);
-        else
-          c.setLevel( character.getLevel() );
-        c.setNotSpentEp( character.getNotSpentEp() );
-        c.setTotalEp( character.getTotalEp() );
+        if (character.getLevel() == 0) {
+            character.setLevel(1);
+            character.setSpentLevel(1);
+        }
+        if (character.getRace() == null) {
+            character.setRace("Mensch");
+        }
 
         // Attributes
-        c.setSt( character.getSt() );
-        c.setKo( character.getKo() );
-        c.setGw( character.getGw() );
-        c.setGs( character.getGs() );
 
         // Attribute Bonus
-        c.setStBonus(getBonus(c.getSt()));
-        c.setKoBonus(getBonus(c.getKo()));
-        c.setGwBonus(getBonus(c.getGw()));
-        c.setGsBonus(getBonus(c.getGs()));
+        character.setStBonus(getBonus(character.getSt()));
+        character.setGsBonus(getBonus(character.getGs()));
+        character.setGwBonus(getBonus(character.getGw()));
+        character.setKoBonus(getBonus(character.getKo()));
+        character.setInBonus(getBonus(character.getIn()));
+        character.setZtBonus(getBonus(character.getZt()));
+        character.setAuBonus(getBonus(character.getAu()));
+        character.setPaBonus(getBonus(character.getPa()));
+
+        // LP & AP
+        character.setApBonus( getApBonus(character) );
+        character.setAp( character.getApWurf() + character.getApBonus());
 
         //// Skills
+        List<Skill> enrichedSkills = new ArrayList<>();
         for (Skill defaultSkill : settings.getDefaultSkills()) {
             Skill skill = new Skill();
-            if (! utility.existSkillEntity(character.getSkills(), defaultSkill.getName()) ) {
+            if (! utility.existSkill(character.getSkills(), defaultSkill.getName()) ) {
                 // Skill does not exist for character --> use default
                 skill.setName( defaultSkill.getName() );
                 skill.setLevel( defaultSkill.getLevel() );
                 skill.setPractice(0);
                 skill.setLearned(false);
             } else {
-                SkillEntity se = utility.findSkillEntity(character.getSkills(),defaultSkill.getName());
+                Skill se = utility.findSkill(character.getSkills(),defaultSkill.getName());
                 skill.setName( se.getName() );
                 skill.setLevel( se.getLevel() );
                 skill.setPractice( se.getPractice() );
                 skill.setLearned(true);
             }
-            c.getSkills().add(skill);
             // enrich raw skills data
-            enrichSkill(skill, c);
+            enrichSkill(skill, character);
+
+            enrichedSkills.add(skill);
         }
+        character.setSkills(enrichedSkills);
 
-        return c;
+        return character;
     }
 
-    private void checkAttribute(int attr) throws Exception {
-        if (attr < 1 || attr > 100) throw new Exception("Attribute out of Range");
+    private void checkAttribute(String name, int attr) throws UserException {
+        if (attr < 1 || attr > 100) throw new UserException(name + " muss zwischen 1 und 100 liegen (" + attr + ")");
     }
 
-    private void enrichSkill(Skill s, PlayerCharacter c) throws Exception {
-        s.setCharacterId(c.getId());
+    private void enrichSkill(Skill s, PlayerCharacter c) throws UserException {
         // name
         // level
 
@@ -102,31 +107,62 @@ public class CalculationServiceImpl implements CalculationService {
         // learned
 
     }
-    private int getAttributeBonus(PlayerCharacter c, String name) throws Exception {
+    private int getAttributeBonus(PlayerCharacter c, String name) throws UserException {
         if (name.equals("St")) {
             return getBonus(c.getSt());
-        }
-        if (name.equals("Ko")) {
-            return getBonus(c.getKo());
-        }
-        if (name.equals("Gw")) {
-            return getBonus(c.getGw());
         }
         if (name.equals("Gs")) {
             return getBonus(c.getGs());
         }
-        throw new Exception("Unknown Attribute");
+        if (name.equals("Gw")) {
+            return getBonus(c.getGw());
+        }
+        if (name.equals("Ko")) {
+            return getBonus(c.getKo());
+        }
+        if (name.equals("In")) {
+            return getBonus(c.getIn());
+        }
+        if (name.equals("Zt")) {
+            return getBonus(c.getZt());
+        }
+        if (name.equals("Au")) {
+            return getBonus(c.getAu());
+        }
+        if (name.equals("Pa")) {
+            return getBonus(c.getPa());
+        }
+        throw new UserException("Attribute " + name + " ist nicht bekannt");
     }
     private int getBonus(int v) {
         if (v <= 5) return -2;
-        if (v <= 10) return -1;
-        if (v >= 95) return 2;
-        if (v >= 90) return 1;
+        if (v <= 20) return -1;
+        if (v >= 96) return 2;
+        if (v >= 81) return 1;
         return 0;
     }
-    private String getBaseAttribute(Skill skill) throws Exception {
+    private String getBaseAttribute(Skill skill) throws UserException {
         Skill s = utility.findSkill(settings.getDefaultSkills(),skill.getName());
-            return s.getBaseAttribute();
+        return s.getBaseAttribute();
+    }
+    private int getApBonus(PlayerCharacter c) {
+        int bonus = (int) Math.round( c.getKo() / 10.0 + c.getSt() / 20.0 );
+        switch (c.getClassName()) {
+            case "Krieger":
+            case "Waldläufer":
+            case "Barbar":
+                bonus += 3 * c.getLevel();
+                break;
+            case "Söldner":
+            case "Spitzbube":
+            case "Schamane":
+                bonus += 2 * c.getLevel();
+                break;
+            default:
+                bonus += c.getLevel();
+
+        }
+        return bonus;
     }
 
     public Cost calculate(PlayerCharacter c, Skill s) {
@@ -145,7 +181,8 @@ public class CalculationServiceImpl implements CalculationService {
         int practice;
         if (s.isLearned()) {
             int newBonus = s.getLevel() + 1;
-            CostsMain costsMain = settings.getMainCosts().get(costsSkill.getCostRow() + "/" + newBonus);
+            String key = costsSkill.getCostRow() + "/" + newBonus;
+            CostsMain costsMain = settings.getMainCosts().get(key);
             te = costsMain.getMultiplier();
 
             practice = Math.min(te, s.getPractice());
@@ -154,40 +191,12 @@ public class CalculationServiceImpl implements CalculationService {
         } else {
             practice = 0;
             ep = le * 3 * teCost;
+            if (c.getRace().equals("Elf")) {
+                ep += 6;
+            }
             gold = 200;
         }
 
         return new Cost(gold,ep,practice,te,le);
     }
-    public PlayerCharacterEntity condense(PlayerCharacter character)  {
-        PlayerCharacterEntity entity = new PlayerCharacterEntity();
-        entity.setId(character.getId());
-        entity.setName(character.getName());
-        entity.setClassName(character.getClassName());
-        entity.setLevel(character.getLevel());
-        entity.setNotSpentEp(character.getNotSpentEp());
-        entity.setTotalEp(character.getTotalEp());
-        entity.setGold(character.getGold());
-        entity.setSt(character.getSt());
-        entity.setKo(character.getKo());
-        entity.setGw(character.getGw());
-        entity.setGs(character.getGs());
-
-        List<SkillEntity> skills = new ArrayList<>();
-        for (Skill skill : character.getSkills() ) {
-            if (skill.isLearned()) {
-                SkillEntity s = new SkillEntity();
-                s.setCharacterId(skill.getCharacterId());
-                s.setName(skill.getName());
-                s.setLevel(skill.getLevel());
-                s.setBaseAttribute(skill.getBaseAttribute());
-                s.setPractice(skill.getPractice());
-                skills.add(s);
-            }
-        }
-        entity.setSkills(skills);
-
-        return entity;
-    }
-
 }

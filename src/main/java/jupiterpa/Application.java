@@ -2,6 +2,7 @@ package jupiterpa;
 
 import jupiterpa.actuator.HealthInfo;
 import jupiterpa.actuator.Health;
+import jupiterpa.repository.PlayerCharacterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -23,10 +24,14 @@ public class Application implements CommandLineRunner {
     @Autowired
     Health health;
 
+    @Autowired
+    PlayerCharacterRepository repo;
+
     @Override
     public void run(String... arg0) {
         logger.info(TECHNICAL,"Application started");
-        health.setHealth(new HealthInfo("Status", false, "Running"));
+        health.setHealth(new HealthInfo("Status",false,"Running"));
+        repo.deleteAll();
     }
 
 }

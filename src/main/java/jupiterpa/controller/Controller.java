@@ -1,18 +1,14 @@
 package jupiterpa.controller;
 
-import jupiterpa.model.Cost;
-import jupiterpa.model.PlayerCharacter;
-import jupiterpa.model.PlayerCharacterEntity;
-import jupiterpa.repository.CharacterRepository;
-import jupiterpa.service.CalculationServiceImpl;
-import jupiterpa.service.LearningServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
+import org.springframework.web.servlet.ModelAndView;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+
+import jupiterpa.model.*;
+import jupiterpa.service.*;
 
 @RequestMapping(path = Controller.PATH)
 @RestController
@@ -20,70 +16,53 @@ public class Controller {
     public static final String PATH = "/api";
 
     @Autowired
-    CharacterRepository characterRepo;
-    @Autowired
-    LearningServiceImpl costService;
-    @Autowired
-    CalculationServiceImpl calculationService;
+    MainService service;
 
+//  GET
     @GetMapping("/character")
     public List<PlayerCharacterInfo> getCharacters() {
-        List<PlayerCharacterEntity> entities = characterRepo.findAll();
-        List<PlayerCharacterInfo> characters = new ArrayList<>();
-        for (PlayerCharacterEntity entity : entities) {
-            PlayerCharacterInfo c = new PlayerCharacterInfo();
-            c.setId(entity.getId());
-            c.setName(entity.getName());
-            c.setClassName(entity.getClassName());
-            c.setLevel(entity.getLevel());
-            characters.add(c);
-        }
-        return characters;
-
+        return service.getCharacters();
     }
 
     @GetMapping("/character/{name}")
-    public List<PlayerCharacter> getCharacters(@PathVariable String name) throws Exception {
-        List<PlayerCharacterEntity> entities = characterRepo.findAll();
-        List<PlayerCharacter> characters = new ArrayList<>();
-        for (PlayerCharacterEntity entity : entities) {
-            PlayerCharacter c = calculationService.enrich(entity);
-            characters.add(c);
-        }
-        return characters;
+    public PlayerCharacter getCharacter(@PathVariable String name) throws UserException {
+        return service.getCharacter(name);
     }
 
+// POST
     @PostMapping("/character")
-    public PlayerCharacter create(@RequestBody PlayerCharacterEntity playerCharacter) throws Exception {
-        PlayerCharacter enrichedPlayerCharacter = calculationService.enrich(playerCharacter);
-        playerCharacter = calculationService.condense(enrichedPlayerCharacter);
-        characterRepo.save(playerCharacter);
-        return enrichedPlayerCharacter;
+    public PlayerCharacter create(@RequestBody PlayerCharacter playerCharacter) throws UserException {
+        return service.create(playerCharacter);
     }
 
-    @PostMapping("/character/{characterId}/learn/{skill}/{gold}")
-    public Cost learnSkill(
-                @PathVariable UUID characterId,
-                @PathVariable String skill,
-                @PathVariable int gold
-                ) throws Exception {
+//  PATCH
+    @PatchMapping("/character/learn")
+    public Cost learnSkill(@RequestBody Learn value) throws UserException {
 
-        // Read corresponding character
-        Optional<PlayerCharacterEntity> co = characterRepo.findById(characterId);
-        if (! co.isPresent()) throw new Exception("Character does not exist");
-        PlayerCharacterEntity entity = co.get();
+        return service.learnSkill(value);
+    }
 
-        // Enrich
-        PlayerCharacter c = calculationService.enrich(entity);
+    @PatchMapping("character/improve")
+    public PlayerCharacter improve(@RequestBody Improve value) {
+        return service.improve(value);
+    }
 
-        // Learn
-        Cost cost = costService.learn(c, skill, gold);
+    @PatchMapping("character/levelup")
+    public PlayerCharacter levelup(@RequestBody LevelUp v) throws UserException {
+        return service.levelUp(v);
+    }
 
-        // Save
-        entity = calculationService.condense(c);
-        characterRepo.save(entity);
+//  Exceptions
+    @ExceptionHandler(UserException.class)
+    public ModelAndView handleException(HttpServletRequest req, UserException exp) throws HTTPUserException {
+        throw new HTTPUserException(exp.getMessage());
+    }
 
-        return cost;
+    @ResponseStatus(value= HttpStatus.BAD_REQUEST)
+    public static class HTTPUserException extends RuntimeException {
+        public HTTPUserException(String text) {
+            super(text);
+        }
     }
 
 }

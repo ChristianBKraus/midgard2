@@ -1,19 +1,17 @@
 package jupiterpa.service;
 
 import jupiterpa.model.PlayerCharacter;
-import jupiterpa.model.PlayerCharacterEntity;
 import jupiterpa.model.Skill;
 import jupiterpa.util.TestCreation;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 public class CalculationTest {
 
@@ -21,7 +19,7 @@ public class CalculationTest {
     UtilityService utility;
 
     @Before
-    public void injet() throws IOException, URISyntaxException {
+    public void injet() throws UserException {
         SettingsService settings = new SettingsServiceImpl();
         utility = new UtilityServiceImpl();
         service = new CalculationServiceImpl(settings,utility);
@@ -29,9 +27,9 @@ public class CalculationTest {
 
 
     @Test
-    public void test() throws Exception {
+    public void test() {
         // Test Input
-        PlayerCharacterEntity entity = TestCreation.create();
+        PlayerCharacter entity = TestCreation.create();
 
         // Process
         PlayerCharacter act = service.enrich(entity);
@@ -41,27 +39,31 @@ public class CalculationTest {
         act.setSkills(new ArrayList<>());
 
         // Get expected and check
-        PlayerCharacter exp = TestCreation.getExpectedCharacter(act.getId());
-        assertThat( act, equalTo(exp));
+        assertThat( act, equalTo(TestCreation.getExpectedCharacter()));
 
         // Get expected skill and check
         assertThat( skills.size(), is(2));
 
         Skill klettern = utility.findSkill(skills,"Klettern");
-        assertThat( klettern, is( TestCreation.getExpectedSkill("Klettern", act.getId())));
+        assertThat( klettern, is( TestCreation.getExpectedSkill("Klettern")));
 
         Skill reiten = utility.findSkill(skills,"Reiten");
-        assertThat( reiten, is( TestCreation.getExpectedSkill("Reiten", act.getId())));
+        assertThat( reiten, is( TestCreation.getExpectedSkill("Reiten")));
     }
 
     @Test
-    public void condense() throws Exception {
-        PlayerCharacterEntity entity = TestCreation.create();
-        PlayerCharacter character = service.enrich(entity);
-        PlayerCharacterEntity condensed = service.condense(character);
-        entity.setLevel(1);
-        entity.setId(condensed.getId());
-        entity.getSkills().get(0).setCharacterId(condensed.getId());
-        assertThat(condensed, is(entity));
+    public void test_elf() {
+        // Test Input
+        PlayerCharacter entity = TestCreation.create();
+        entity.setRace("Elf");
+
+        // Process
+        PlayerCharacter act = service.enrich(entity);
+
+        Skill klettern = utility.findSkill(act.getSkills(),"Klettern");
+        assertThat( klettern.getCostEP(), is(TestCreation.getExpectedSkill("Klettern").getCostEP()));
+
+        Skill reiten = utility.findSkill(act.getSkills(),"Reiten");
+        assertThat( reiten.getCostEP(), is( TestCreation.getExpectedSkill("Reiten").getCostEP() + 6));
     }
 }

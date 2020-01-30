@@ -1,28 +1,30 @@
 package jupiterpa.util;
 
 import jupiterpa.model.PlayerCharacter;
-import jupiterpa.model.PlayerCharacterEntity;
 import jupiterpa.model.Skill;
-import jupiterpa.model.SkillEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class TestCreation {
 
-    public static PlayerCharacterEntity create() {
-        PlayerCharacterEntity c = new PlayerCharacterEntity();
+    public static PlayerCharacter create() {
+        PlayerCharacter c = new PlayerCharacter();
         c.setName("Name");
         c.setClassName("Krieger");
         c.setSt(2);
-        c.setKo(10);
         c.setGs(90);
         c.setGw(99);
-        List<SkillEntity> skills = new ArrayList<>();
+        c.setKo(10);
+        c.setIn(50);
+        c.setZt(50);
+        c.setAu(50);
+        c.setPa(50);
+        c.setApWurf(2);
+        List<Skill> skills = new ArrayList<>();
 
 
-        SkillEntity s = new SkillEntity();
+        Skill s = new Skill();
         s.setName("Klettern");
         s.setLevel(12);
         s.setBaseAttribute("Gs");
@@ -33,31 +35,43 @@ public class TestCreation {
         return c;
     }
 
-    public static PlayerCharacter getExpectedCharacter(long id) {
+    public static PlayerCharacter getExpectedCharacter() {
         PlayerCharacter exp = new PlayerCharacter();
-        exp.setId( id );
         exp.setName( "Name" );
         exp.setClassName( "Krieger" );
+        exp.setRace("Mensch");
         exp.setLevel(1);
+        exp.setSpentLevel(1);
         exp.setNotSpentEp(0);
         exp.setTotalEp(0);
         exp.setSt( 2 );
-        exp.setKo( 10 );
         exp.setGs( 90 );
         exp.setGw( 99 );
+        exp.setKo( 10 );
+        exp.setIn( 50 );
+        exp.setZt( 50 );
+        exp.setAu( 50 );
+        exp.setPa( 50 );
 
         exp.setStBonus(-2);
-        exp.setKoBonus(-1);
         exp.setGsBonus(1);
         exp.setGwBonus(2);
+        exp.setKoBonus(-1);
+        exp.setInBonus(0);
+        exp.setZtBonus(0);
+        exp.setAuBonus(0);
+        exp.setPaBonus(0);
+
+        exp.setApWurf(2);
+        exp.setApBonus(4);
+        exp.setAp(6);
 
         return exp;
     }
 
-    public static Skill getExpectedSkill(String name, long id) {
+    public static Skill getExpectedSkill(String name) {
         Skill skill = new Skill();
         if (name.equals("Klettern")) {
-            skill.setCharacterId(id);
             skill.setName("Klettern");
             skill.setLevel(12);
             skill.setBaseAttribute("Gs");
@@ -71,7 +85,6 @@ public class TestCreation {
             skill.setLearned(true);
         }
         if (name.equals("Reiten")) {
-            skill.setCharacterId(id);
             skill.setName("Reiten");
             skill.setLevel(2);
             skill.setBaseAttribute("Gs");

@@ -3,7 +3,6 @@ package jupiterpa.service;
 import jupiterpa.model.*;
 
 public interface CalculationService {
-    PlayerCharacter enrich(PlayerCharacterEntity c) throws Exception;
+    PlayerCharacter enrich(PlayerCharacter c) throws UserException;
     Cost calculate(PlayerCharacter c, Skill s);
-    PlayerCharacterEntity condense(PlayerCharacter character) throws Exception;
 }
