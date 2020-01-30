@@ -1,0 +1,9 @@
+{
+    "meta":{
+        "title":"Testseite | Midgard-Steigerung"
+    },
+    "container":"standard.json",
+    "content":"test.html", 
+    "hierarchyName":"Testseite", 
+    "subpages":null
+}

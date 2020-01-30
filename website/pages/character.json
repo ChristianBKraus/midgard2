@@ -1,0 +1,9 @@
+{
+    "meta":{
+        "title":"Charakter | Midgard-Steigerung"
+    },
+    "container":"standard.json",
+    "content":"character.html", 
+    "hierarchyName":"Charakter", 
+    "subpages":null
+}

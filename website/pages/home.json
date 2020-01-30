@@ -1,0 +1,9 @@
+{
+    "meta":{
+        "title":"Home | Midgard-Steigerung"
+    },
+    "container":"standard.json",
+    "content":"home.html", 
+    "hierarchyName":"Home", 
+    "subpages":null
+}
