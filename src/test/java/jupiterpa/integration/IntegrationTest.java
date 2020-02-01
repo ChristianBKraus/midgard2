@@ -1,4 +1,3 @@
-/*
 package jupiterpa.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -313,4 +312,3 @@ public class IntegrationTest {
                 );
     }
 }
-*/
