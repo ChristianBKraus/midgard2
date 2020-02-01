@@ -10,10 +10,13 @@ import jupiterpa.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,17 +54,17 @@ public class SettingsServiceImpl implements SettingsService {
 
     public List<Skill> getDefaultSkills() throws UserException {
         defaultSkills = new ArrayList<>();
-        loadFile("settings/defaultSkills.csv", defaultSkillConsumer);
+        loadFile("defaultSkills.csv", defaultSkillConsumer);
         return defaultSkills;
     }
 
     public Map<String, CostsLevel> getLevelCosts() { return levelCosts; }
 
     public SettingsServiceImpl() throws UserException {
-        loadFile("settings/mainCosts.csv", mainConsumer);
-        loadFile("settings/classCosts.csv", classConsumer);
-        loadFile("settings/skillCosts.csv", skillConsumer);
-        loadFile("settings/levelCosts.csv", levelConsumer );
+        loadFile("mainCosts.csv", mainConsumer);
+        loadFile("classCosts.csv", classConsumer);
+        loadFile("skillCosts.csv", skillConsumer);
+        loadFile("levelCosts.csv", levelConsumer );
         if (health != null)
             health.setHealth(new HealthInfo("Status", false, "Initialized"));
     }
@@ -91,7 +94,16 @@ public class SettingsServiceImpl implements SettingsService {
     void loadFile(String file, Consumer<String[]> consumer) throws UserException {
         try {
             CSVParser parser = new CSVParserBuilder().withSeparator(';').withIgnoreQuotations(true).build();
-            Reader reader = Files.newBufferedReader(Paths.get(ClassLoader.getSystemResource(file).toURI()));
+            URL resource = getClass().getClassLoader().getResource(file);
+            Reader reader;
+            try  {
+                assert resource != null;
+                URI uri = resource.toURI();
+                Path path = Paths.get(uri);
+                reader = Files.newBufferedReader(path);
+            } catch (FileSystemNotFoundException e) {
+                reader = new BufferedReader (new FileReader(file));
+            }
             CSVReader mainReader = new CSVReaderBuilder(reader).withSkipLines(1).withCSVParser(parser).build();
             mainReader.forEach(consumer);
         } catch (URISyntaxException | IOException e) {
