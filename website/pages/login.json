@@ -1,0 +1,9 @@
+{
+    "meta":{
+        "title":"Login | Midgard-Steigerung"
+    },
+    "container":"standard.json",
+    "content":"login.html", 
+    "hierarchyName":"Login", 
+    "subpages":null
+}

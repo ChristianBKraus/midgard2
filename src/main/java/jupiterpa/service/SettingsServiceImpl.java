@@ -47,7 +47,6 @@ public class SettingsServiceImpl implements SettingsService {
     public Map<String, CostsClass> getClassCosts() {
         return classCosts;
     }
-
     public List<String> getClasses() {
         return classes;
     }

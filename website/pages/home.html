@@ -1,0 +1,48 @@
+<h1>Midgard-Steigerung: Herzlich willkommen!</h1>
+
+<h2>Einleitung</h2>
+<p>
+    Midgard-Steigerung ist ein Projekt von Christian und Jonathan Kraus. Mit dem Programm kann man Midgard-Charaktere speichern und steigern. Der Unterschied zu <a href="http://moam.de">MOAM</a> ist, dass sich das Programm auf die Steigerung ansich konzentriert und ein paar Features verbirgt, die in MOAM nicht enthalten sind. 
+</p>
+
+<h2>Anmelden</h2>
+<input type="text" id="username" placeholder="Benutzername">
+<input type="password" id="password" placeholder="Passwort">
+<br><br>
+<a class="button" onclick="login()">anmelden</a>
+<p class="note">Du bist neu? <a id="register-link" onclick="showRegister()">Registrieren!</a></p>
+
+<div coll-id="register" coll-state="hidden">
+    <h2>Registrieren</h2>
+    <label>Benutzername: </label>
+    <input type="text" id="register-username">
+    <br>
+    <label>E-Mail-Adresse: </label>
+    <input type="email" id="register-email">
+    <br>
+    <label>Passwort: </label>
+    <input type="password" id="register-password">
+    <br><br>
+    <a class="button" onclick="register()">registrieren</a>
+</div>
+
+<script>
+
+function login() {
+    var username = value("username");
+    var password = value("password");
+    // <!>
+}
+
+function showRegister() {
+    deactivateLink("register-link");
+    collapseToggle("register");
+}
+
+function register() {
+    var username = value("register-username");
+    var password = value("register-password");
+    // <!>
+}
+
+</script>

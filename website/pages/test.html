@@ -1,0 +1,68 @@
+<h1>Midgard-Steigerung</h1>
+
+<h2>Einleitung</h2>
+<p>
+    Midgard-Steigerung ist ein Projekt von Christian und Jonathan Kraus. Mit dem Programm kann man Midgard-Charaktere speichern und steigern. Der Unterschied zu <a href="http://moam.de">MOAM</a> ist, dass sich das Programm auf die Steigerung ansich konzentriert (Extra-Features: Praxispunkte, Gold anstatt EP et cetera). 
+</p>
+
+<h2>Stylesheet-Beispiele</h2>
+
+<h3>Tabelle</h3>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Benutzer</th>
+        <th>EP</th>
+        <th>Gold</th>
+    </tr>
+    <tr>
+        <td>Laetullo</td>
+        <td>JupiterPi</td>
+        <td>56</td>
+        <td>80 GS</td>
+    </tr>
+    <tr>
+        <td>Bruder Tuck</td>
+        <td>ChristianBKraus</td>
+        <td>34</td>
+        <td>12 GS</td>
+    </tr>
+</table>
+
+<h3>Bild</h3>
+<img src="/pic/pic.jpg">
+<img src="/pic/pic2.jpg">
+<img src="/pic/pic3.jpg">
+
+<h3>Buttons</h3>
+<a class="button" onclick="test(this)">download</a>
+
+<h3>Zusammenklappen</h3>
+
+<h2>Einfach</h2>
+<p>
+    Hier kannst du das hier anschauen:
+    <a class="button" onclick="collapseToggle('01');">show / hide</a>
+</p>
+<div coll-id="01" coll-state="shown">
+    <p>Das kannst du hier lesen, wenn du es ausklappst. </p>
+</div>
+
+<h2>Zweifach</h2>
+<p>
+    Und hier kannst du nich was ausklappen. 
+    <a class="button" onclick="collapseToggle('02');">show / hide</a>
+</p>
+<div coll-id="02" coll-state="hidden" coll-distributor coll-hidden="02.hidden" coll-shown="02.shown"></div>
+<div coll-id="02.hidden">
+    <p>Aktuell ist der Text versteckt. </p>
+</div>
+<div coll-id="02.shown">
+    <p>Jetzt ist der Text sichtbar. </p>
+</div>
+
+<script>
+function test(caller) {
+    alert(caller + " called test() !");
+}
+</script>
